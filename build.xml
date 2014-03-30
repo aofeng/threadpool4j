@@ -1,0 +1,61 @@
+<project name="threadpool4j" basedir="." default="all">
+    <property name="project_name" value="threadpool4j"></property>
+    <property name="project_version" value="1.0.0"></property>
+    <property name="package_name" value="${project_name}-${project_version}"></property>
+    <property name="src_dir" value="${basedir}/src"></property>
+    <property name="lib_dir" value="${basedir}/lib"></property>
+    <property name="build_dir" value="${basedir}/temp"></property>
+    <property name="dist_dir" value="${basedir}/dist"></property>
+
+    <path id="app.classpath">
+        <fileset dir="${lib_dir}">
+            <include name="**/*.jar" />
+        </fileset>
+        <path location="${basedir}/config" />
+        <path location="${basedir}/resources" />
+    </path>
+
+    <target name="clean">
+        <delete dir="${build_dir}"></delete>
+        <delete dir="${dist_dir}"></delete>
+    </target>
+
+    <target name="prepare">
+        <mkdir dir="${build_dir}" />
+        <mkdir dir="${build_dir}/${package_name}" />
+        <mkdir dir="${dist_dir}" />
+    </target>
+
+    <target name="compile">
+        <javac srcdir="${src_dir}" destdir="${build_dir}/${package_name}" debug="on" source="1.6" includeantruntime="on">
+            <classpath refid="app.classpath">
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="jar">
+        <jar destfile="${dist_dir}/${package_name}.jar" basedir="${build_dir}/${package_name}">
+            <manifest>
+                <attribute name="Created-By" value="NieYong, http://aofengblog.blog.163.com" />
+                <attribute name="Built-By" value="NieYong, http://aofengblog.blog.163.com" />
+                <attribute name="Implementation-Vendor" value="NieYong" />
+                <attribute name="Implementation-Title" value="NieYong" />
+                <attribute name="Implementation-Version" value="1.0.0" />
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="jar-src">
+        <jar destfile="${dist_dir}/${package_name}-src.jar" basedir="${src_dir}">
+            <manifest>
+                <attribute name="Built-By" value="NieYong, http://aofengblog.blog.163.com" />
+                <attribute name="Implementation-Vendor" value="NieYong" />
+                <attribute name="Implementation-Title" value="NieYong" />
+                <attribute name="Implementation-Version" value="1.0.0" />
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="all" depends="clean, prepare, compile, jar, jar-src">
+    </target>
+</project>
