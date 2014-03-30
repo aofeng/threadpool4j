@@ -1,6 +1,11 @@
 *.class
 
 # Package Files #
-*.jar
 *.war
 *.ear
+/classes
+/logs
+/dist
+/temp
+/.classpath
+/.project
