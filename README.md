@@ -11,9 +11,11 @@ threadpool4j
 
 ![车道划分](http://img0.ph.126.net/JgUtSzhdAatg_5B5mne0KQ==/6608414527631781351.png)
 
-那么异步任务放入不同的线程池执行，就可以解决上面的问题。`threadpool4j`就是这一个`多线程池`的类库，使用方法如下：
+同理，将异步任务放入不同的线程池执行，就可以解决上面的两个问题。
 
-1、获取threadpool4j源码。
+`threadpool4j`是一个实现了`多线程池`的类库，使用方法如下：
+
+1、获取`threadpool4j`源码。
 ```shell
 git clone https://github.com/aofeng/threadpool4j
 ```
@@ -31,6 +33,7 @@ threadpool4j-1.0.0.jar        用于发布的二进制jar
 它的依赖类库在lib目录下。有common4j-*.jar，log4j-1.*.jar。
 
 3、配置多线程池。
+
 在应用的CLASSPATH的任意路径（如：应用的classes目录）下新建一个`threadpool4j.xml`的配置文件，其内容为：
 ```java
 <?xml version="1.0" encoding="UTF-8"?>
@@ -81,7 +84,7 @@ Runnable task2 = new Runnable() {
 ThreadPool.getInstance().submit(task2, "other");   // 将task2提交到名为"other"的线程池执行
 ```
 
-6、在应用关闭时执行线程池的资料释放操作，释放资源的过程会将队列中的异步任务都执行完成。
+6、在应用关闭时执行线程池的资源释放操作，释放资源的过程会将队列中的异步任务都执行完成。
 ```java
 ThreadPool.getInstance().destroy();
 ```
