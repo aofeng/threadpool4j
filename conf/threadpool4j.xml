@@ -2,19 +2,19 @@
 <threadpool4j>
     <!-- 至少要有一个线程池default -->
     <pool name="default">
-        <corePoolSize>30</corePoolSize>
-        <maxPoolSize>150</maxPoolSize>
+        <corePoolSize>10</corePoolSize>
+        <maxPoolSize>100</maxPoolSize>
         <!-- 线程空闲存话的时间。单位：秒 -->
         <keepAliveTime>5</keepAliveTime>
         <workQueueSize>100000</workQueueSize>
     </pool>
     
-    <!--
+
     <pool name="other">
         <corePoolSize>10</corePoolSize>
         <maxPoolSize>100</maxPoolSize>
-        <keepAliveTime>10</keepAliveTime>
-        <workQueueSize>10000</workQueueSize>
+        <keepAliveTime>5</keepAliveTime>
+        <workQueueSize>100000</workQueueSize>
     </pool>
-    -->
+
 </threadpool4j>

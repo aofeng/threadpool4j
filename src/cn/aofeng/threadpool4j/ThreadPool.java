@@ -46,7 +46,8 @@ public class ThreadPool implements ILifeCycle {
         for (ThreadPoolInfo threadPoolInfo : threadPoolInfoList) {
             BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<Runnable>(threadPoolInfo.getQueueSize());
             ThreadPoolExecutor threadPool = new ThreadPoolExecutor(threadPoolInfo.getCoreSize(), threadPoolInfo.getMaxSize(), 
-                    threadPoolInfo.getThreadKeepAliveTime(), TimeUnit.SECONDS, workQueue);
+                    threadPoolInfo.getThreadKeepAliveTime(), TimeUnit.SECONDS, workQueue, 
+                    new DefaultThreadFactory(threadPoolInfo.getName()));
             _multiThreadPool.put(threadPoolInfo.getName(), threadPool);
         }
         
