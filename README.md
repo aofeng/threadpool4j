@@ -13,83 +13,8 @@ threadpool4j
 
 同理，将异步任务放入不同的线程池执行，就可以解决上面的两个问题。
 
-`threadpool4j`是一个实现了`多线程池`的类库，使用方法如下：
+`threadpool4j`是一个实现了`多线程池`的类库，其文档如下：
 
-1、获取`threadpool4j`源码。
-```shell
-git clone https://github.com/aofeng/threadpool4j
-```
-2、编译源码生成jar。
+1、[编译threadpool4j](https://github.com/aofeng/threadpool4j/wiki/%E7%BC%96%E8%AF%91threadpool4j)。
 
-进入项目根目录，执行ant脚本：
-```shell
-ant
-```
-会生成一个dist目录，下面有两个文件。如：
-<pre>
-threadpool4j-1.0.0-src.jar    源码jar
-threadpool4j-1.0.0.jar        用于发布的二进制jar
-</pre>
-它的依赖类库在lib目录下。有common4j-*.jar，log4j-1.*.jar。
-
-3、配置多线程池。
-
-在应用的CLASSPATH的任意路径（如：应用的classes目录）下新建一个`threadpool4j.xml`的配置文件，其内容为：
-```java
-<?xml version="1.0" encoding="UTF-8"?>
-<threadpool4j>
-    <!-- 至少要有一个线程池default -->
-    <pool name="default">
-        <corePoolSize>30</corePoolSize>
-        <maxPoolSize>150</maxPoolSize>
-        <!-- 线程空闲存话的时间。单位：秒 -->
-        <keepAliveTime>5</keepAliveTime>
-        <workQueueSize>100000</workQueueSize>
-    </pool>
-    
-    <pool name="other">
-        <corePoolSize>10</corePoolSize>
-        <maxPoolSize>100</maxPoolSize>
-        <keepAliveTime>10</keepAliveTime>
-        <workQueueSize>10000</workQueueSize>
-    </pool>
-</threadpool4j>
-```
-
-4、在应用的启动过程中执行线程池的初始化操作。
-```java
-ThreadPool.getInstance().init();   // 只需执行一次
-```
-输出的日志类似如下：
-<pre>
-2014-03-31 21:13:13,925 INFO  initialization 2 thread pool successfully
-</pre>
-
-5、向不同的线程池提交异步任务。
-```java
-Runnable task1 = new Runnable() {
-    @Override
-    public void run() {
-        System.out.println("执行异步任务1");
-    }
-};
-ThreadPool.getInstance().submit(task1);   // 未指定线程池名称时，任务会提交到名为"default"的线程池执行
-
-Runnable task2 = new Runnable() {
-    @Override
-    public void run() {
-        System.out.println("执行异步任务2");
-    }
-};
-ThreadPool.getInstance().submit(task2, "other");   // 将task2提交到名为"other"的线程池执行
-```
-
-6、在应用关闭时执行线程池的资源释放操作，释放资源的过程会将队列中的异步任务都执行完成。
-```java
-ThreadPool.getInstance().destroy();
-```
-输出的日志类似如下：
-<pre>
-2014-03-31 21:16:48,512 INFO  shutdown the thread pool other
-2014-03-31 21:16:48,513 INFO  shutdown the thread pool default
-<pre>
+2、[threadpool4j使用指南](https://github.com/aofeng/threadpool4j/wiki/threadpool4j%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97)。
