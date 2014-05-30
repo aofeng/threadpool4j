@@ -20,7 +20,7 @@ public class ThreadPoolTest {
     
     @Before
     public void setUp() throws Exception {
-        _threadPool._configFile = "/threadpool4j.xml";
+        _threadPool._configFile = "/biz/threadpool4j.xml";
         _threadPool.init();
     }
     
@@ -38,7 +38,7 @@ public class ThreadPoolTest {
         assertTrue(_threadPool._multiThreadPool.containsKey("other"));
     }
     
-    @Test(expected=NullPointerException.class)
+    @Test(expected=IllegalArgumentException.class)
     public void testSubmitRunnable4TaskIsNull() {
         _threadPool.submit(null);
     }

@@ -32,7 +32,7 @@ public class ThreadPool implements ILifeCycle {
     
     Map<String, ExecutorService> _multiThreadPool = new HashMap<String, ExecutorService>();
     
-    String _configFile = "/threadpool4j.xml";
+    String _configFile = "/biz/threadpool4j.xml";
     
     private static ThreadPool _instance = new ThreadPool();
     
@@ -96,14 +96,16 @@ public class ThreadPool implements ILifeCycle {
      * 
      * @param task 实现了{@link Runnable}接口的异步任务
      * @param threadpoolName 线程池名称
-     * @return 异步任务执行的结果。如果指定的线程池不存在
-     * @throws IllegalArgumentException 如果指定的线程池名称不存在
-     * @throws NullPointerException 如果指定的<code>task</code>为null
+     * @return 异步任务执行的结果
+     * @throws IllegalArgumentException 如果指定的<code>task</code>为null，或者指定的线程池名称不存在
      */
     public Future<?> submit(Runnable task, String threadpoolName) {
         ExecutorService threadPool = _multiThreadPool.get(threadpoolName);
+        if (null == task) {
+            throw new IllegalArgumentException("task is null");
+        }
         if (null == threadPool) {
-            throw new IllegalArgumentException("thread pool %s not exists");
+            throw new IllegalArgumentException( String.format("thread pool %s not exists", threadpoolName) );
         }
         
         if (_logger.isDebugEnabled()) {
