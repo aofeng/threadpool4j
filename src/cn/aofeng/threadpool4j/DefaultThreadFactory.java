@@ -10,22 +10,26 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class DefaultThreadFactory implements ThreadFactory {
 
-    private String _namePrefix = "aofeng";
+    private String _namePrefix;
     
     private AtomicInteger _number = new AtomicInteger(1);
     
+    private ThreadGroup _threadGroup;
+    
     public DefaultThreadFactory() {
-        // nothing
+        this("aofeng");
     }
     
     public DefaultThreadFactory(String namePrefix) {
         this._namePrefix = namePrefix;
+        ThreadGroup root = ThreadUtil.getRootThreadGroup();
+        _threadGroup = new ThreadGroup(root, _namePrefix+"-pool");
     }
     
     @Override
     public Thread newThread(Runnable r) {
-        Thread thread = new Thread(r);
-        thread.setName(_namePrefix+"-pool-"+_number.getAndIncrement());
+        Thread thread = new Thread(_threadGroup, r);
+        thread.setName(_namePrefix+"-"+_number.getAndIncrement());
         if (thread.isDaemon()) {
             thread.setDaemon(false);
         }
