@@ -101,6 +101,11 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.3.2</version>
                 <configuration>
+                    <excludes>
+                        <exclude>biz/*</exclude>
+                        <exclude>log4j.xml</exclude>
+                        <exclude>log4j.dtd</exclude>
+                    </excludes>
                     <archive>
                         <index>true</index>
                         <manifest>
@@ -116,9 +121,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>2.1.2</version>
+                <version>2.2.1</version>
                 <configuration>
-                   <attach>true</attach>
+                   <excludeResources>true</excludeResources>
                 </configuration>
                 <executions>
                     <execution>
