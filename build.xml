@@ -2,6 +2,9 @@
     <property name="project_name" value="threadpool4j"></property>
     <property name="project_version" value="1.0.0"></property>
     <property name="package_name" value="${project_name}-${project_version}"></property>
+	<property name="author" value="NieYong"></property>
+	<property name="organization" value="cn.aofeng"></property>
+	<property name="project_url" value="https://github.com/aofeng/threadpool4jj"></property>
     <property name="src_dir" value="${basedir}/src"></property>
     <property name="lib_dir" value="${basedir}/lib"></property>
     <property name="build_dir" value="${basedir}/temp"></property>
@@ -35,23 +38,24 @@
 
     <target name="jar">
         <jar destfile="${dist_dir}/${package_name}.jar" basedir="${build_dir}/${package_name}">
-            <manifest>
-                <attribute name="Created-By" value="NieYong, http://aofengblog.blog.163.com" />
-                <attribute name="Built-By" value="NieYong, http://aofengblog.blog.163.com" />
-                <attribute name="Implementation-Vendor" value="NieYong" />
-                <attribute name="Implementation-Title" value="NieYong" />
-                <attribute name="Implementation-Version" value="1.0.0" />
-            </manifest>
+        	<manifest>
+        		<attribute name="Built-By" value="${author}" />
+        		<attribute name="Implementation-Vendor-Id" value="${organization}" />
+        		<attribute name="Implementation-Vendor" value="${project_url}" />
+        		<attribute name="Implementation-Title" value="${project_name}" />
+        		<attribute name="Implementation-Version" value="${project_version}" />
+        	</manifest>
         </jar>
     </target>
 
     <target name="jar-src">
-        <jar destfile="${dist_dir}/${package_name}-src.jar" basedir="${src_dir}">
+        <jar destfile="${dist_dir}/${package_name}-sources.jar" basedir="${src_dir}">
             <manifest>
-                <attribute name="Built-By" value="NieYong, http://aofengblog.blog.163.com" />
-                <attribute name="Implementation-Vendor" value="NieYong" />
-                <attribute name="Implementation-Title" value="NieYong" />
-                <attribute name="Implementation-Version" value="1.0.0" />
+            	<attribute name="Built-By" value="${author}" />
+            	<attribute name="Implementation-Vendor-Id" value="${organization}" />
+            	<attribute name="Implementation-Vendor" value="${project_url}" />
+            	<attribute name="Implementation-Title" value="${project_name}" />
+            	<attribute name="Implementation-Version" value="${project_version}" />
             </manifest>
         </jar>
     </target>
