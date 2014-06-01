@@ -10,17 +10,16 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * {@link ThreadPool}的单元测试用例。
+ * {@link ThreadPoolImpl}的单元测试用例。
  * 
  * @author <a href="mailto:aofengblog@163.com">聂勇</a>
  */
 public class ThreadPoolTest {
 
-    private static ThreadPool _threadPool = ThreadPool.getInstance();
+    private static ThreadPoolImpl _threadPool = ThreadPoolImpl.getInstance();
     
     @Before
     public void setUp() throws Exception {
-        _threadPool._configFile = "/biz/threadpool4j.xml";
         _threadPool.init();
     }
     
@@ -30,12 +29,13 @@ public class ThreadPoolTest {
     
     @Test
     public void testInit() {
-        _threadPool._configFile = "/cn/aofeng/threadpool4j/threadpool4j_test.xml";
         _threadPool.init();
         
         assertEquals(2, _threadPool._multiThreadPool.size());
         assertTrue(_threadPool._multiThreadPool.containsKey("default"));
         assertTrue(_threadPool._multiThreadPool.containsKey("other"));
+        assertTrue(_threadPool._threadPoolConfig._threadStateSwitch);
+        assertEquals(60, _threadPool._threadPoolConfig._threadStateInterval);
     }
     
     @Test(expected=IllegalArgumentException.class)
