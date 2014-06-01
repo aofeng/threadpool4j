@@ -16,4 +16,6 @@
 		<workQueueSize>100000</workQueueSize>
 	</pool>
 
+    <!-- 线程状态开关：on-开；off-关 -->
+    <threadstate switch="on" interval="60"></threadstate>
 </threadpool4j>

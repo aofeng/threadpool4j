@@ -1,8 +1,7 @@
 package cn.aofeng.threadpool4j;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -13,13 +12,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 import cn.aofeng.common4j.ILifeCycle;
-import cn.aofeng.common4j.xml.DomUtil;
-import cn.aofeng.common4j.xml.NodeParser;
 
 /**
  * 多线程池。
@@ -28,13 +22,12 @@ import cn.aofeng.common4j.xml.NodeParser;
  */
 public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
 
-    private static Logger _logger = Logger.getLogger(ThreadPoolImpl.class);
+    private static Logger _logger = Logger.getLogger(ThreadPoolImpl.class);    
     
-    String _configFile = "/biz/threadpool4j.xml";
-    
-    Map<String, ThreadPoolInfo> _multiThreadPoolInfo = new HashMap<String, ThreadPoolInfo>();
+    ThreadPoolConfig _threadPoolConfig = new ThreadPoolConfig();
     
     Map<String, ExecutorService> _multiThreadPool = new HashMap<String, ExecutorService>();
+    private ThreadStateJob _threadStateJob;
     
     private static ThreadPoolImpl _instance = new ThreadPoolImpl();
     
@@ -44,42 +37,28 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
     
     @Override
     public void init() {
-        List<ThreadPoolInfo> threadPoolInfoList = getConfig();
+        _threadPoolConfig.init();
+        
+        Collection<ThreadPoolInfo> threadPoolInfoList = _threadPoolConfig.getThreadPoolConfig();
         for (ThreadPoolInfo threadPoolInfo : threadPoolInfoList) {
             BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<Runnable>(threadPoolInfo.getQueueSize());
             ThreadPoolExecutor threadPool = new ThreadPoolExecutor(threadPoolInfo.getCoreSize(), threadPoolInfo.getMaxSize(), 
                     threadPoolInfo.getThreadKeepAliveTime(), TimeUnit.SECONDS, workQueue, 
                     new DefaultThreadFactory(threadPoolInfo.getName()));
-            _multiThreadPoolInfo.put(threadPoolInfo.getName(), threadPoolInfo);
             _multiThreadPool.put(threadPoolInfo.getName(), threadPool);
             _logger.info( String.format("initialization thread pool %s successfully", threadPoolInfo.getName()) );
         }
         _logger.info( String.format("initialization %d thread pool successfully", threadPoolInfoList.size()) );
-    }
-    
-    private List<ThreadPoolInfo> getConfig() {
-        List<ThreadPoolInfo> threadPoolInfoList = new ArrayList<ThreadPoolInfo>();
-        Document document = DomUtil.createDocument(_configFile);
-        if (null == document) {
-            return threadPoolInfoList;
-        }
         
-        Element root = document.getDocumentElement();
-        NodeParser rootParser = new NodeParser(root);
-        List<Node> nodeList = rootParser.getChildNodes();
-        for (Node node : nodeList) {
-            ThreadPoolInfo info = new ThreadPoolInfo();
-            NodeParser nodeParser = new NodeParser(node);
-            info.setName(nodeParser.getAttributeValue("name"));
-            info.setCoreSize(Integer.parseInt(nodeParser.getChildNodeValue("corePoolSize")));
-            info.setMaxSize(Integer.parseInt(nodeParser.getChildNodeValue("maxPoolSize")));
-            info.setThreadKeepAliveTime(Long.parseLong(nodeParser.getChildNodeValue("keepAliveTime")));
-            info.setQueueSize(Integer.parseInt(nodeParser.getChildNodeValue("workQueueSize")));
+        if (_threadPoolConfig.getThreadStateSwitch()) {
+            _threadStateJob = new ThreadStateJob(_threadPoolConfig.getThreadStateInterval());
+            _threadStateJob.init();
+            Thread jobThread = new Thread(_threadStateJob);
+            jobThread.setName("threadpool4j-threadstate-job");
+            jobThread.start();
             
-            threadPoolInfoList.add(info);
+            _logger.info("thread state statitics job start successfully");
         }
-        
-        return threadPoolInfoList;
     }
     
     public Future<?> submit(Runnable task) {
@@ -104,7 +83,7 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
     
     @Override
     public ThreadPoolInfo getThreadPoolInfo(String threadpoolName) {
-        ThreadPoolInfo info = _multiThreadPoolInfo.get(threadpoolName);
+        ThreadPoolInfo info = _threadPoolConfig.getThreadPoolConfig(threadpoolName);
         
         return info.clone();
     }
@@ -115,6 +94,8 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
             _logger.info("shutdown the thread pool "+entry.getKey());
             entry.getValue().shutdown();
         }
+        
+        _threadStateJob.destroy();
     }
 
 }

@@ -14,6 +14,19 @@
 		</layout>
 	</appender>
 	
+	<appender name="threadstate"
+        class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="logs/threadpool4j-threadstate.log" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                value="%m%n" />
+            <!--
+            value="%d %-5p [%t] %C{2} (%F:%L) - %m%n
+            value="%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p [%t] %C{2} (%F:%L) - %m%n
+            -->
+        </layout>
+    </appender>
+	
 	<appender name="Console"
 		class="org.apache.log4j.ConsoleAppender">
 		<layout class="org.apache.log4j.PatternLayout">
@@ -23,9 +36,14 @@
 	</appender>
 	
 	<root>
-		<priority value="info" />
+		<level value="info"></level>
 		<appender-ref ref="threadpool4j" />
 		<appender-ref ref="Console" />
 	</root>
+	
+	<logger name="cn.aofeng.threadpool4j.ThreadStateJob" additivity="false" >
+	   <level value="info"></level>
+	   <appender-ref ref="threadstate"/>
+	</logger>
 
 </log4j:configuration>
