@@ -1,11 +1,15 @@
 package cn.aofeng.threadpool4j;
 
+import java.io.Serializable;
+
 /**
  * 线程池信息。
  * 
  * @author <a href="mailto:aofengblog@163.com">聂勇</a>
  */
-public class ThreadPoolInfo {
+public class ThreadPoolInfo implements Serializable, Cloneable {
+
+    private static final long serialVersionUID = 8994270363831737712L;
 
     // 线程池名称
     private String name;
@@ -60,6 +64,17 @@ public class ThreadPoolInfo {
 
     public void setQueueSize(int queueSize) {
         this.queueSize = queueSize;
+    }
+
+    public ThreadPoolInfo clone() {
+        ThreadPoolInfo obj = new ThreadPoolInfo();
+        obj.name = this.name;
+        obj.coreSize = this.coreSize;
+        obj.maxSize = this.maxSize;
+        obj.threadKeepAliveTime = this.threadKeepAliveTime;
+        obj.queueSize = this.queueSize;
+        
+        return obj;
     }
 
 }
