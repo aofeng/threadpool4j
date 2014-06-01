@@ -12,7 +12,8 @@ public class ThreadPoolExample {
      * @throws Exception 
      */
     public static void main(String[] args) throws Exception {
-        ThreadPool.getInstance().init();
+        ThreadPoolImpl threadPool = ThreadPoolImpl.getInstance();
+        threadPool.init();
         
         for (int i = 0; i < 1000000; i++) {
             Runnable task1 = new Runnable() {
@@ -21,7 +22,7 @@ public class ThreadPoolExample {
                     System.out.println("执行异步任务1");
                 }
             };
-            ThreadPool.getInstance().submit(task1);
+            threadPool.submit(task1);
             
             Runnable task2 = new Runnable() {
                 @Override
@@ -29,12 +30,12 @@ public class ThreadPoolExample {
                     System.out.println("执行异步任务2");
                 }
             };
-            ThreadPool.getInstance().submit(task2, "other");
+            threadPool.submit(task2, "other");
             
             Thread.sleep(50);
         }
         
-        ThreadPool.getInstance().destroy();
+        threadPool.destroy();
     }
 
 }
