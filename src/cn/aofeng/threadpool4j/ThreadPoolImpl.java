@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 
 import cn.aofeng.common4j.ILifeCycle;
+import cn.aofeng.threadpool4j.job.ThreadPoolStateJob;
 import cn.aofeng.threadpool4j.job.ThreadStateJob;
 
 /**
@@ -28,6 +29,7 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
     ThreadPoolConfig _threadPoolConfig = new ThreadPoolConfig();
     
     Map<String, ExecutorService> _multiThreadPool = new HashMap<String, ExecutorService>();
+    private ThreadPoolStateJob _threadPoolStateJob;
     private ThreadStateJob _threadStateJob;
     
     private static ThreadPoolImpl _instance = new ThreadPoolImpl();
@@ -39,6 +41,7 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
     @Override
     public void init() {
         initThreadPool();
+        startThreadPoolStateJob();
         startThreadStateJob();
     }
     
@@ -57,6 +60,23 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
             _logger.info( String.format("initialization thread pool %s successfully", threadPoolInfo.getName()) );
         }
         _logger.info( String.format("initialization %d thread pool successfully", threadPoolInfoList.size()) );
+    }
+    
+    /**
+     * 初始化并启动线程池状态统计Job。
+     */
+    private void startThreadPoolStateJob() {
+        if (_threadPoolConfig.getThreadPoolStateSwitch()) {
+            _threadPoolStateJob = new ThreadPoolStateJob(
+                    _multiThreadPool,
+                    _threadPoolConfig.getThreadPoolStateInterval() );
+            _threadPoolStateJob.init();
+            Thread jobThread = new Thread(_threadPoolStateJob);
+            jobThread.setName("threadpool4j-threadpoolstate");
+            jobThread.start();
+            
+            _logger.info("thread pool state statitics job start successfully");
+        }
     }
     
     /**
@@ -108,6 +128,7 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
             entry.getValue().shutdown();
         }
         
+        _threadPoolStateJob.destroy();
         _threadStateJob.destroy();
     }
 

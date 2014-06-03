@@ -51,13 +51,14 @@ public class ThreadPoolConfigTest {
      * 测试用例：读取线程池配置文件 <br/>
      * 前置条件：
      * <pre>
-     * 1.5.0版本的配置文件，有线程状态输出开关（threadstate节点）
+     * 1.5.0版本的配置文件，有线程池状态输出开关（threadpoolstate节点）和线程状态输出开关（threadstate节点）
      * </pre>
      * 
      * 测试结果：
      * <pre>
      * 1、有两个线程池的配置信息，分别是default和other。
-     * 2、线程状态输出开关的值为true。
+     * 2、线程池状态输出开关的值为true，输出间隔为120秒。
+     * 3、线程状态输出开关的值为true，输出间隔为180秒。
      * </pre>
      */
     @Test
@@ -67,7 +68,10 @@ public class ThreadPoolConfigTest {
         assertEquals(2, _threadPoolConfig._multiThreadPoolInfo.size());
         assertTrue(_threadPoolConfig._multiThreadPoolInfo.containsKey("default"));
         assertTrue(_threadPoolConfig._multiThreadPoolInfo.containsKey("other"));
-        assertTrue(_threadPoolConfig._threadStateSwitch);
+        assertTrue(_threadPoolConfig.getThreadPoolStateSwitch());
+        assertEquals(120, _threadPoolConfig.getThreadPoolStateInterval());
+        assertTrue(_threadPoolConfig.getThreadStateSwitch());
+        assertEquals(180, _threadPoolConfig.getThreadStateInterval());
     }
 
 }

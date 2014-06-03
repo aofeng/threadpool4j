@@ -23,41 +23,12 @@ public class ThreadPoolConfig implements ILifeCycle {
     protected String _configFile = "/biz/threadpool4j.xml";
     
     protected Map<String, ThreadPoolInfo> _multiThreadPoolInfo = new HashMap<String, ThreadPoolInfo>();
+    
+    protected boolean _threadPoolStateSwitch = false;
+    protected int _threadPoolStateInterval = 60;   // 单位：秒
+    
     protected boolean _threadStateSwitch = false;
     protected int _threadStateInterval = 60;   // 单位：秒
-    
-    /**
-     * 获取指定线程池的配置信息。
-     * 
-     * @param threadpoolName 线程池名称
-     * @return 线程池配置信息（{@link ThreadPoolInfo}）
-     */
-    public ThreadPoolInfo getThreadPoolConfig(String threadpoolName) {
-        return _multiThreadPoolInfo.get(threadpoolName);
-    }
-    
-    /**
-     * 获取所有线程池的配置信息。
-     * 
-     * @return 线程池配置信息（{@link ThreadPoolInfo}）集合
-     */
-    public Collection<ThreadPoolInfo> getThreadPoolConfig() {
-        return _multiThreadPoolInfo.values();
-    }
-    
-    /**
-     * @return 输出各个线程池中线程状态的开关，true表示开，false表示关
-     */
-    public boolean getThreadStateSwitch() {
-        return _threadStateSwitch;
-    }
-    
-    /**
-     * @return 线程状态输出的间隔时间（单位：秒）
-     */
-    public int getThreadStateInterval() {
-        return _threadStateInterval;
-    }
     
     @Override
     public void init() {
@@ -81,12 +52,63 @@ public class ThreadPoolConfig implements ILifeCycle {
                 info.setQueueSize(Integer.parseInt(nodeParser.getChildNodeValue("workQueueSize")));
                 
                 _multiThreadPoolInfo.put(info.getName(), info);
+            } else if ( "threadpoolstate".equals(node.getNodeName()) ) {
+                String temp = nodeParser.getAttributeValue("switch");
+                _threadPoolStateSwitch = "on".equalsIgnoreCase(temp);
+                _threadPoolStateInterval = Integer.parseInt(nodeParser.getAttributeValue("interval"));
             } else if ( "threadstate".equals(node.getNodeName()) ) {
                 String temp = nodeParser.getAttributeValue("switch");
                 _threadStateSwitch = "on".equalsIgnoreCase(temp);
                 _threadStateInterval = Integer.parseInt(nodeParser.getAttributeValue("interval"));
             }
         } // end of for
+    }
+    
+    /**
+     * 获取指定线程池的配置信息。
+     * 
+     * @param threadpoolName 线程池名称
+     * @return 线程池配置信息（{@link ThreadPoolInfo}）
+     */
+    public ThreadPoolInfo getThreadPoolConfig(String threadpoolName) {
+        return _multiThreadPoolInfo.get(threadpoolName);
+    }
+    
+    /**
+     * 获取所有线程池的配置信息。
+     * 
+     * @return 线程池配置信息（{@link ThreadPoolInfo}）集合
+     */
+    public Collection<ThreadPoolInfo> getThreadPoolConfig() {
+        return _multiThreadPoolInfo.values();
+    }
+    
+    /**
+     * @return 输出各个线程池状态信息的开关，true表示开，false表示关
+     */
+    public boolean getThreadPoolStateSwitch() {
+        return _threadPoolStateSwitch;
+    }
+    
+    /**
+     * @return 线程池状态信息输出的间隔时间（单位：秒）
+     */
+    public int getThreadPoolStateInterval() {
+        return _threadPoolStateInterval;
+    }
+    
+    /**
+     * @return 输出各个线程组中线程状态信息的开关，true表示开，false表示关
+     */
+    public boolean getThreadStateSwitch() {
+        return _threadStateSwitch;
+    }
+    
+    /**
+     * @return 线程状态信息输出的间隔时间（单位：秒）
+     */
+    public int getThreadStateInterval() {
+        return _threadStateInterval;
     }
     
     @Override

@@ -4,7 +4,6 @@
     <pool name="default">
         <corePoolSize>30</corePoolSize>
         <maxPoolSize>150</maxPoolSize>
-        <!-- 线程空闲存话的时间。单位：秒 -->
         <keepAliveTime>5</keepAliveTime>
         <workQueueSize>100000</workQueueSize>
     </pool>
@@ -16,6 +15,8 @@
         <workQueueSize>10000</workQueueSize>
     </pool>
     
-    <!-- 线程状态配置。swicth：on-开；off-关； interval：输出的间隔时间（秒） -->
-    <threadstate switch="on" interval="60"></threadstate>
+    <threadpoolstate switch="on" interval="120"></threadpoolstate>
+    
+    <threadstate switch="on" interval="180"></threadstate>
+
 </threadpool4j>
