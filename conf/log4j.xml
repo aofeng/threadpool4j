@@ -35,7 +35,7 @@
 		</layout>
 	</appender>
 	
-	<logger name="cn.aofeng.threadpool4j.ThreadStateJob" additivity="false" >
+	<logger name="cn.aofeng.threadpool4j.job.ThreadStateJob" additivity="false" >
        <level value="info"></level>
        <appender-ref ref="threadstate"/>
     </logger>

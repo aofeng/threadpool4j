@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 
 import cn.aofeng.common4j.ILifeCycle;
+import cn.aofeng.threadpool4j.job.ThreadStateJob;
 
 /**
  * 多线程池。

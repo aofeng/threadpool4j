@@ -1,4 +1,4 @@
-package cn.aofeng.threadpool4j;
+package cn.aofeng.threadpool4j.job;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -11,6 +11,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.log4j.Logger;
 
 import cn.aofeng.common4j.ILifeCycle;
+import cn.aofeng.threadpool4j.ThreadStateInfo;
+import cn.aofeng.threadpool4j.ThreadUtil;
 
 /**
  * 收集所有线程组中所有线程的状态信息，统计并输出汇总信息。
