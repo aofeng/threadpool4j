@@ -37,8 +37,15 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
     
     @Override
     public void init() {
+        initThreadPool();
+        startThreadStateJob();
+    }
+    
+    /**
+     * 初始化所有线程池。
+     */
+    private void initThreadPool() {
         _threadPoolConfig.init();
-        
         Collection<ThreadPoolInfo> threadPoolInfoList = _threadPoolConfig.getThreadPoolConfig();
         for (ThreadPoolInfo threadPoolInfo : threadPoolInfoList) {
             BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<Runnable>(threadPoolInfo.getQueueSize());
@@ -49,12 +56,17 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
             _logger.info( String.format("initialization thread pool %s successfully", threadPoolInfo.getName()) );
         }
         _logger.info( String.format("initialization %d thread pool successfully", threadPoolInfoList.size()) );
-        
+    }
+    
+    /**
+     * 初始化并启动线程状态统计Job。
+     */
+    private void startThreadStateJob() {
         if (_threadPoolConfig.getThreadStateSwitch()) {
             _threadStateJob = new ThreadStateJob(_threadPoolConfig.getThreadStateInterval());
             _threadStateJob.init();
             Thread jobThread = new Thread(_threadStateJob);
-            jobThread.setName("threadpool4j-threadstate-job");
+            jobThread.setName("threadpool4j-threadstate");
             jobThread.start();
             
             _logger.info("thread state statitics job start successfully");
