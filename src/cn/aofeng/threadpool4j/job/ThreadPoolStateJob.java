@@ -28,19 +28,12 @@ public class ThreadPoolStateJob extends AbstractJob {
     
     @Override
     protected void execute() {
-        StringBuilder buffer = new StringBuilder(2048)
-            .append(super.currentTime())
-            .append(" thread pool state:")
-            .append(super._lineSeparator);
-        
         Set<Entry<String, ExecutorService>> poolSet = _multiThreadPool.entrySet();
         for (Entry<String, ExecutorService> entry : poolSet) {
             ThreadPoolExecutor pool = (ThreadPoolExecutor) entry.getValue();
-            buffer.append( String.format("ThreadPool:%s, ActiveThread:%d, TotalTask:%d, CompletedTask:%d, Queue:%d", 
-                    entry.getKey(), pool.getActiveCount(), pool.getTaskCount(), pool.getCompletedTaskCount(), pool.getQueue().size()) )
-                .append(super._lineSeparator);
+            _logger.info( String.format("ThreadPool:%s, ActiveThread:%d, TotalTask:%d, CompletedTask:%d, Queue:%d", 
+                    entry.getKey(), pool.getActiveCount(), pool.getTaskCount(), pool.getCompletedTaskCount(), pool.getQueue().size()) );
         }
-        _logger.info(buffer.toString());        
         
         try {
             Thread.sleep(_interval * 1000);

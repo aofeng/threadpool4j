@@ -25,21 +25,14 @@ public class ThreadStateJob extends AbstractJob {
 
     @Override
     protected void execute() {
-        StringBuilder buffer = new StringBuilder(2048);
-        buffer.append(super.currentTime())
-                .append(" thread state:")
-                .append(super._lineSeparator);
-        
         Map<String, ThreadStateInfo> statMap = ThreadUtil.statAllGroupThreadState();
         
         for (Entry<String, ThreadStateInfo> entry : statMap.entrySet()) {
             ThreadStateInfo stateInfo = entry.getValue();
-            buffer.append( String.format("ThreadGroup:%s, NEW:%d,  RUNNABLE:%d, BLOCKED:%d, WAITING:%d, TIMED_WAITING:%d, TERMINATED:%d", 
-                        entry.getKey(), stateInfo.getNewCount(), stateInfo.getRunnableCount(), stateInfo.getBlockedCount(),
-                        stateInfo.getWaitingCount(), stateInfo.getTimedWaitingCount(), stateInfo.getTerminatedCount()) )
-                    .append(super._lineSeparator);
+            _logger.info( String.format("ThreadGroup:%s, New:%d,  Runnable:%d, Blocked:%d, Waiting:%d, TimedWaiting:%d, Terminated:%d", 
+                    entry.getKey(), stateInfo.getNewCount(), stateInfo.getRunnableCount(), stateInfo.getBlockedCount(),
+                    stateInfo.getWaitingCount(), stateInfo.getTimedWaitingCount(), stateInfo.getTerminatedCount()) );
         }
-        _logger.info(buffer.toString());
         
         try {
             Thread.sleep(_interval * 1000);
