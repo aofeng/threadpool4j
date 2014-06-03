@@ -35,15 +35,15 @@
 		</layout>
 	</appender>
 	
+	<logger name="cn.aofeng.threadpool4j.ThreadStateJob" additivity="false" >
+       <level value="info"></level>
+       <appender-ref ref="threadstate"/>
+    </logger>
+    
 	<root>
 		<level value="info"></level>
 		<appender-ref ref="threadpool4j" />
 		<appender-ref ref="Console" />
 	</root>
-	
-	<logger name="cn.aofeng.threadpool4j.ThreadStateJob" additivity="false" >
-	   <level value="info"></level>
-	   <appender-ref ref="threadstate"/>
-	</logger>
 
 </log4j:configuration>
