@@ -29,7 +29,7 @@ public class DefaultThreadFactory implements ThreadFactory {
     @Override
     public Thread newThread(Runnable r) {
         Thread thread = new Thread(_threadGroup, r);
-        thread.setName(_namePrefix+"-"+_number.getAndIncrement());
+        thread.setName(_threadGroup.getName()+"-"+_number.getAndIncrement());
         if (thread.isDaemon()) {
             thread.setDaemon(false);
         }
