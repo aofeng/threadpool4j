@@ -75,7 +75,7 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
             jobThread.setName("threadpool4j-threadpoolstate");
             jobThread.start();
             
-            _logger.info("thread pool state statitics job start successfully");
+            _logger.info("start threadpoolstate job successfully");
         }
     }
     
@@ -90,7 +90,7 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
             jobThread.setName("threadpool4j-threadstate");
             jobThread.start();
             
-            _logger.info("thread state statitics job start successfully");
+            _logger.info("start threadstate job successfully");
         }
     }
     
@@ -129,7 +129,10 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
         }
         
         _threadPoolStateJob.destroy();
+        _logger.info("stop threadpoolstate job successfully");
+        
         _threadStateJob.destroy();
+        _logger.info("stop threadstate job successfully");
     }
 
 }
