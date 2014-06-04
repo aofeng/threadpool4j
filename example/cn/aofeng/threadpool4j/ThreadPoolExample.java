@@ -32,9 +32,10 @@ public class ThreadPoolExample {
      * @throws Exception 
      */
     public static void main(String[] args) throws Exception {
-        ILifeCycle th = ThreadPoolImpl.getInstance();
+        ThreadPoolImpl temp = new ThreadPoolImpl();
+        ILifeCycle th = temp;
         th.init();
-        ThreadPool threadPool = ThreadPoolImpl.getInstance();
+        ThreadPool threadPool = temp;
         final ThreadPoolExample self = new ThreadPoolExample();
         
         for (int i = 0; i < 1000000; i++) {

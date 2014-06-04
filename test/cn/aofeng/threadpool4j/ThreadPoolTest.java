@@ -16,7 +16,7 @@ import org.junit.Test;
  */
 public class ThreadPoolTest {
 
-    private static ThreadPoolImpl _threadPool = ThreadPoolImpl.getInstance();
+    private ThreadPoolImpl _threadPool = new ThreadPoolImpl();
     
     @Before
     public void setUp() throws Exception {

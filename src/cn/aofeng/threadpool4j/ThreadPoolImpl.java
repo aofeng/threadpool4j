@@ -32,10 +32,8 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
     private ThreadPoolStateJob _threadPoolStateJob;
     private ThreadStateJob _threadStateJob;
     
-    private static ThreadPoolImpl _instance = new ThreadPoolImpl();
-    
-    public static ThreadPoolImpl getInstance() {
-        return _instance;
+    public ThreadPoolImpl() {
+        // nothing
     }
     
     @Override
