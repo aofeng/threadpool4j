@@ -15,7 +15,7 @@ public interface ThreadPool {
      * 
      * @param task 实现了{@link Runnable}接口的异步任务
      * @return 异步任务执行的结果
-     * @throws NullPointerException 如果指定的<code>task</code>为null
+     * @throws IllegalArgumentException 如果指定的<code>task</code>为null
      * @see #submit(Runnable, String)
      */
     public Future<?> submit(Runnable task);
