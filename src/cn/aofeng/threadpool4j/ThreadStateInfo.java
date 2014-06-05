@@ -2,10 +2,6 @@ package cn.aofeng.threadpool4j;
 
 import java.io.Serializable;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
-
 /**
  * 线程状态统计信息。
  * 
@@ -13,7 +9,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  */
 public class ThreadStateInfo implements Serializable {
 
-    private static final long serialVersionUID = 786834757573281082L;
+    private static final long serialVersionUID = 5759858852685030129L;
 
     int newCount;
 
@@ -77,35 +73,61 @@ public class ThreadStateInfo implements Serializable {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(-667676487, -1677911895)
-                .append(this.newCount).append(this.runnableCount)
-                .append(this.blockedCount).append(this.waitingCount)
-                .append(this.timedWaitingCount).append(this.terminatedCount)
-                .toHashCode();
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + blockedCount;
+        result = prime * result + newCount;
+        result = prime * result + runnableCount;
+        result = prime * result + terminatedCount;
+        result = prime * result + timedWaitingCount;
+        result = prime * result + waitingCount;
+        return result;
     }
 
     @Override
-    public boolean equals(Object object) {
-        if (!(object instanceof ThreadStateInfo)) {
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
             return false;
         }
-        ThreadStateInfo rhs = (ThreadStateInfo) object;
-        return new EqualsBuilder().append(this.newCount, rhs.newCount)
-                .append(this.runnableCount, rhs.runnableCount)
-                .append(this.blockedCount, rhs.blockedCount)
-                .append(this.waitingCount, rhs.waitingCount)
-                .append(this.timedWaitingCount, rhs.timedWaitingCount)
-                .append(this.terminatedCount, rhs.terminatedCount).isEquals();
+        if (!(obj instanceof ThreadStateInfo)) {
+            return false;
+        }
+        ThreadStateInfo other = (ThreadStateInfo) obj;
+        if (blockedCount != other.blockedCount) {
+            return false;
+        }
+        if (newCount != other.newCount) {
+            return false;
+        }
+        if (runnableCount != other.runnableCount) {
+            return false;
+        }
+        if (terminatedCount != other.terminatedCount) {
+            return false;
+        }
+        if (timedWaitingCount != other.timedWaitingCount) {
+            return false;
+        }
+        if (waitingCount != other.waitingCount) {
+            return false;
+        }
+        return true;
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("newCount", this.newCount)
-                .append("runnableCount", this.runnableCount)
-                .append("blockedCount", this.blockedCount)
-                .append("waitingCount", this.waitingCount)
-                .append("timedWaitingCount", this.timedWaitingCount)
-                .append("terminatedCount", this.terminatedCount).toString();
+        StringBuilder buffer = new StringBuilder(256)
+            .append("ThreadStateInfo [newCount=").append(newCount)
+            .append(", runnableCount=").append(runnableCount)
+            .append(", blockedCount=").append(blockedCount)
+            .append(", waitingCount=").append(waitingCount)
+            .append(", timedWaitingCount=").append(timedWaitingCount)
+            .append(", terminatedCount=").append(terminatedCount)
+            .append("]");
+        return buffer.toString();
     }
 
 }

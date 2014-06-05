@@ -77,4 +77,47 @@ public class ThreadPoolInfo implements Serializable, Cloneable {
         return obj;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof ThreadPoolInfo)) {
+            return false;
+        }
+        ThreadPoolInfo other = (ThreadPoolInfo) obj;
+        if (name == null) {
+            if (other.name != null) {
+                return false;
+            }
+        } else if (!name.equals(other.name)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder buffer = new StringBuilder(160)
+            .append("ThreadPoolInfo [name=").append(name)
+            .append(", coreSize=").append(coreSize)
+            .append(", maxSize=").append(maxSize)
+            .append(", threadKeepAliveTime=").append(threadKeepAliveTime)
+            .append(", queueSize=").append(queueSize).append("]");
+        
+        return buffer.toString();
+    }
+
+    
 }
