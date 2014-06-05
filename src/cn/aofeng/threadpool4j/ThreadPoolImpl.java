@@ -55,9 +55,8 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
                     threadPoolInfo.getThreadKeepAliveTime(), TimeUnit.SECONDS, workQueue, 
                     new DefaultThreadFactory(threadPoolInfo.getName()));
             _multiThreadPool.put(threadPoolInfo.getName(), threadPool);
-            _logger.info( String.format("initialization thread pool %s successfully", threadPoolInfo.getName()) );
+            _logger.info( String.format("initialization thread pool %s success", threadPoolInfo.getName()) );
         }
-        _logger.info( String.format("initialization %d thread pool successfully", threadPoolInfoList.size()) );
     }
     
     /**
@@ -73,7 +72,7 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
             jobThread.setName("threadpool4j-threadpoolstate");
             jobThread.start();
             
-            _logger.info("start threadpoolstate job successfully");
+            _logger.info("start  job 'threadpool4j-threadpoolstate' success");
         }
     }
     
@@ -88,7 +87,7 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
             jobThread.setName("threadpool4j-threadstate");
             jobThread.start();
             
-            _logger.info("start threadstate job successfully");
+            _logger.info("start job 'threadpool4j-threadstate' success");
         }
     }
     
@@ -127,10 +126,10 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
         }
         
         _threadPoolStateJob.destroy();
-        _logger.info("stop threadpoolstate job successfully");
+        _logger.info("stop job 'threadpool4j-threadpoolstate' success");
         
         _threadStateJob.destroy();
-        _logger.info("stop threadstate job successfully");
+        _logger.info("stop job 'threadpool4j-threadstate' success");
     }
 
 }
