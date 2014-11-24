@@ -58,3 +58,5 @@
 1、[编译threadpool4j](https://github.com/aofeng/threadpool4j/wiki/%E7%BC%96%E8%AF%91threadpool4j)。
 
 2、[threadpool4j入门指南](https://github.com/aofeng/threadpool4j/wiki/threadpool4j%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97)。
+
+3、[配置日志输出](https://github.com/aofeng/threadpool4j/wiki/%E9%85%8D%E7%BD%AE%E6%97%A5%E5%BF%97%E8%BE%93%E5%87%BA)
