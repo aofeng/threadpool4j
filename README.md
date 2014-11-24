@@ -14,37 +14,42 @@
 
 特性
 ===
-1、** 模块稳定 ** 。
+
+1、**模块稳定**。
 * 已在实际的业务中应用，使用多线程池模块每天执行超过3亿个异步任务，运行稳定。
 
-2、** 支持多个线程池 **。
+2、**支持多个线程池**。
 * 每个线程池有独立的名称，可配置不同的线程数。
 * 业务可根据异步任务的操作，将它们分发至不同的线程池，避免将所有的异步任务放在一个池中相互影响。
 
-3、** 完善的统计和健康状态信息 **。
+3、**完善的统计和健康状态信息**。
 * 每分钟输出一次各个线程池的执行任务数和队列积压情况。
-> [2014-07-08 18:05:54] ~ ThreadPool:default, ActiveThread:0, TotalTask:327563397, CompletedTask:327563397, Queue:0
-> [2014-07-08 18:05:54] ~ ThreadPool:outer, ActiveThread:0, TotalTask:7033787, CompletedTask:7033787, Queue:0
-> [2014-07-08 18:05:54] ~ ThreadPool:account, ActiveThread:0, TotalTask:17359, CompletedTask:17359, Queue:0
-> [2014-07-08 18:05:54] ~ ThreadPool:channel, ActiveThread:0, TotalTask:7037913, CompletedTask:7037913, Queue:0
+<pre>
+[2014-07-08 18:05:54] ~ ThreadPool:default, ActiveThread:0, TotalTask:327563397, CompletedTask:327563397, Queue:0
+[2014-07-08 18:05:54] ~ ThreadPool:outer, ActiveThread:0, TotalTask:7033787, CompletedTask:7033787, Queue:0
+[2014-07-08 18:05:54] ~ ThreadPool:account, ActiveThread:0, TotalTask:17359, CompletedTask:17359, Queue:0
+[2014-07-08 18:05:54] ~ ThreadPool:channel, ActiveThread:0, TotalTask:7037913, CompletedTask:7037913, Queue:0
+</pre>
 
 * 每分钟输出一次各个线程池的线程状态信息。
-> [2014-07-08 17:36:58] ~ ThreadGroup:channel-pool, New:0, Runnable:0, Blocked:0, Waiting:30, TimedWaiting:0, Terminated:0
-> [2014-07-08 17:36:58] ~ ThreadGroup:outer-pool, New:0, Runnable:0, Blocked:0, Waiting:10, TimedWaiting:0, Terminated:0
-> [2014-07-08 17:36:58] ~ ThreadGroup:account-pool, New:0, Runnable:0, Blocked:0, Waiting:30, TimedWaiting:0, Terminated:0
-> [2014-07-08 17:36:58] ~ ThreadGroup:default-pool, New:0, Runnable:1, Blocked:0, Waiting:29, TimedWaiting:1, Terminated:0
+<pre>
+[2014-07-08 17:36:58] ~ ThreadGroup:channel-pool, New:0, Runnable:0, Blocked:0, Waiting:30, TimedWaiting:0, Terminated:0
+[2014-07-08 17:36:58] ~ ThreadGroup:outer-pool, New:0, Runnable:0, Blocked:0, Waiting:10, TimedWaiting:0, Terminated:0
+[2014-07-08 17:36:58] ~ ThreadGroup:account-pool, New:0, Runnable:0, Blocked:0, Waiting:30, TimedWaiting:0, Terminated:0
+[2014-07-08 17:36:58] ~ ThreadGroup:default-pool, New:0, Runnable:1, Blocked:0, Waiting:29, TimedWaiting:1, Terminated:0
+</pre>
 
 * 输出的日志信息对统计程序和统计脚本友好，容易切分。
 
-4、** 使用和配置简单 **。
+4、**使用和配置简单**。
 * 从多线程池模块复制biz/threadpool4j.xml配置文件，然后根据项目的实际需要简单修改即可（简单的项目不修改亦可使用）。
 * 只需一行代码就可以执行异步任务。
 
-5、** 初始化和关闭所有线程池简单 **。
+5、**初始化和关闭所有线程池简单**。
 * 应用启动时，执行一行代码可初始化配置文件中所有的线程池。
 * 应用关闭时，执行一行代码可安全地关闭所有的线程池。
 
-6、** 无框架依赖性 **。
+6、**无框架依赖性**。
 * 不依赖特定的框架，适用于所有使用Java语言的应用。
 
 
