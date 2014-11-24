@@ -1,9 +1,9 @@
 threadpool4j
 ============
 
-在软件架构和设计中，会尽可能地将操作异步化，缩短响应时间，提升性能。
+在软件架构和设计中，会尽可能地将操作`异步化`，缩短响应时间，提升性能。
 
-将异步任务放入线程池，这是许多人都知道的。但是当异步任务多了之后，如果全放在同一个线程池执行，会出现一些问题：
+将异步任务放入`线程池`，这是许多人都知道的。但是当异步任务多了之后，如果全放在同一个线程池执行，会出现一些问题：
 * 不同任务因其执行的操作不同，所需时间不同。如果有大量执行时间较久的异步任务，会阻塞那些执行非常快的异步任务，导致原本很快可以完成的异步任务也变慢。
 * 操作本地内容的异步任务和操作远程内容的异步任务。如果放在同一个线程池中，在网络出现故障的情况下，会出现大量的任务积压，导致执行本地内容的异步任务也受影响。
 
@@ -17,4 +17,4 @@ threadpool4j
 
 1、[编译threadpool4j](https://github.com/aofeng/threadpool4j/wiki/%E7%BC%96%E8%AF%91threadpool4j)。
 
-2、[threadpool4j使用指南](https://github.com/aofeng/threadpool4j/wiki/threadpool4j%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97)。
+2、[threadpool4j入门指南](https://github.com/aofeng/threadpool4j/wiki/threadpool4j%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97)。
