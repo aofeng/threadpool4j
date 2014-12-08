@@ -3,7 +3,12 @@ package cn.aofeng.threadpool4j;
 import java.util.Arrays;
 import java.util.Random;
 
-public class AsynTask implements Runnable {
+/**
+ * 不需要返回值的异步任务。
+ * 
+ * @author <a href="mailto:aofengblog@163.com">聂勇</a>
+ */
+public class RunnableAsynTask implements Runnable {
 
     // 耗时的操作（配置低一些的机器小心CPU 100％，反应慢）
     public void needSomeTime() {
