@@ -203,11 +203,15 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
             entry.getValue().shutdown();
         }
         
-        _threadPoolStateJob.destroy();
-        _logger.info("stop job 'threadpool4j-threadpoolstate' success");
+        if (null != _threadPoolStateJob) {
+            _threadPoolStateJob.destroy();
+            _logger.info("stop job 'threadpool4j-threadpoolstate' success");
+        }
         
-        _threadStateJob.destroy();
-        _logger.info("stop job 'threadpool4j-threadstate' success");
+        if (null != _threadStateJob) {
+            _threadStateJob.destroy();
+            _logger.info("stop job 'threadpool4j-threadstate' success");
+        }
     }
 
 }
