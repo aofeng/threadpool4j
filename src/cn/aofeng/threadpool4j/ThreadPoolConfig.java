@@ -20,7 +20,9 @@ import cn.aofeng.common4j.xml.NodeParser;
  */
 public class ThreadPoolConfig implements ILifeCycle {
 
-    protected String _configFile = "/biz/threadpool4j.xml";
+    public final static String DEFAULT_CONFIG_FILE = "/biz/threadpool4j.xml";
+    
+    protected String _configFile =DEFAULT_CONFIG_FILE;
     
     protected Map<String, ThreadPoolInfo> _multiThreadPoolInfo = new HashMap<String, ThreadPoolInfo>();
     
@@ -113,7 +115,9 @@ public class ThreadPoolConfig implements ILifeCycle {
     
     @Override
     public void destroy() {
-        // nothing
+        _threadPoolStateSwitch = false;
+        _threadStateSwitch = false;
+        _multiThreadPoolInfo.clear();
     }
 
 }
