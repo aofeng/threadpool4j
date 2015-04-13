@@ -154,7 +154,7 @@ public class ThreadPoolConfigTest {
         assertEquals(10000, otherInfo.getQueueSize());
         
         // 线程池状态统计配置信息
-        assertTrue(_threadPoolConfig._threadPoolStateSwitch);
+        assertFalse(_threadPoolConfig._threadPoolStateSwitch);
         assertEquals(120, _threadPoolConfig._threadPoolStateInterval);
         
         // 线程状态统计配置信息
