@@ -53,15 +53,24 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
      * 初始化所有线程池。
      */
     private void initThreadPool() {
+        boolean defaultPoolExists = false;
         _threadPoolConfig.init();
         Collection<ThreadPoolInfo> threadPoolInfoList = _threadPoolConfig.getThreadPoolConfig();
         for (ThreadPoolInfo threadPoolInfo : threadPoolInfoList) {
+            if (DEFAULT_THREAD_POOL.equals(threadPoolInfo.getName())) {
+                defaultPoolExists = true; 
+            }
+            
             BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<Runnable>(threadPoolInfo.getQueueSize());
             ThreadPoolExecutor threadPool = new ThreadPoolExecutor(threadPoolInfo.getCoreSize(), threadPoolInfo.getMaxSize(), 
                     threadPoolInfo.getThreadKeepAliveTime(), TimeUnit.SECONDS, workQueue, 
                     new DefaultThreadFactory(threadPoolInfo.getName()));
             _multiThreadPool.put(threadPoolInfo.getName(), threadPool);
             _logger.info( String.format("initialization thread pool %s success", threadPoolInfo.getName()) );
+        }
+        
+        if (! defaultPoolExists) {
+            throw new IllegalStateException( String.format("the default thread pool not exists, please check the config file '%s'", _threadPoolConfig._configFile) );
         }
     }
     
@@ -206,12 +215,16 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
         if (null != _threadPoolStateJob) {
             _threadPoolStateJob.destroy();
             _logger.info("stop job 'threadpool4j-threadpoolstate' success");
+            _threadPoolStateJob = null;
         }
         
         if (null != _threadStateJob) {
             _threadStateJob.destroy();
             _logger.info("stop job 'threadpool4j-threadstate' success");
+            _threadStateJob = null;
         }
+        
+        _threadPoolConfig.destroy();
     }
 
 }
