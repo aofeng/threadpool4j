@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<threadpool4j>
+    <!-- 至少要有一个线程池default -->
+    <pool name="hello">
+        <corePoolSize>10</corePoolSize>
+        <maxPoolSize>100</maxPoolSize>
+        <keepAliveTime>10</keepAliveTime>
+        <workQueueSize>10000</workQueueSize>
+    </pool>
+    
+    <threadpoolstate switch="on" interval="120"></threadpoolstate>
+    
+    <threadstate switch="on" interval="100"></threadstate>
+
+</threadpool4j>

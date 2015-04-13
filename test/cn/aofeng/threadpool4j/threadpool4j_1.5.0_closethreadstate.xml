@@ -15,7 +15,7 @@
         <workQueueSize>10000</workQueueSize>
     </pool>
     
-    <threadpoolstate switch="on" interval="120"></threadpoolstate>
+    <threadpoolstate switch="off" interval="120"></threadpoolstate>
     
     <threadstate switch="off" interval="100"></threadstate>
 

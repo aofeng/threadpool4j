@@ -32,6 +32,7 @@ public class ThreadPoolTest {
     
     @Before
     public void setUp() throws Exception {
+        _threadPool._threadPoolConfig._configFile = ThreadPoolConfig.DEFAULT_CONFIG_FILE;
         _threadPool.init();
     }
     
@@ -46,6 +47,41 @@ public class ThreadPoolTest {
         assertTrue(_threadPool._multiThreadPool.containsKey("other"));
         assertTrue(_threadPool._threadPoolConfig._threadStateSwitch);
         assertEquals(60, _threadPool._threadPoolConfig._threadStateInterval);
+    }
+    
+    @Test
+    public void testDestroy() {
+        String configFile = "/cn/aofeng/threadpool4j/threadpool4j_1.5.0_closethreadstate.xml";
+        
+        _threadPool.destroy();
+        _threadPool._threadPoolConfig._configFile = configFile;
+        _threadPool.init();
+        _threadPool.destroy();
+    }
+    
+    /**
+     * 测试用例：没有默认的线程池'default' <br/>
+     * 前置条件：
+     * <pre>
+     * 1、2.1.0版本的配置文件
+     * 2、没有名为default的线程池。
+     * </pre>
+     * 
+     * 测试结果：
+     * <pre>
+     * 抛出IllegalStateException异常
+     * </pre>
+     */
+    @Test
+    public void testInit42_1_0_NoDefaultPool() {
+        String configFile = "/cn/aofeng/threadpool4j/threadpool4j_2.1.0_no_default_pool.xml";
+        
+        _expectedEx.expect(IllegalStateException.class);
+        _expectedEx.expectMessage( String.format("the default thread pool not exists, please check the config file '%s'", configFile) );
+        
+        _threadPool.destroy();
+        _threadPool._threadPoolConfig._configFile = configFile;
+        _threadPool.init();
     }
     
     /**
