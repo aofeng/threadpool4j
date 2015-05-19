@@ -55,11 +55,11 @@
 
 文档
 ===
-1、[编译threadpool4j](https://github.com/aofeng/threadpool4j/wiki/%E7%BC%96%E8%AF%91threadpool4j)。
+1、[编译threadpool4j](doc/guide/01-compile.md)。
 
-2、[threadpool4j入门指南](https://github.com/aofeng/threadpool4j/wiki/threadpool4j%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97)。
+2、[threadpool4j入门指南](doc/guide/02-guide.md)。
 
-3、[配置日志输出](https://github.com/aofeng/threadpool4j/wiki/%E9%85%8D%E7%BD%AE%E6%97%A5%E5%BF%97%E8%BE%93%E5%87%BA)。
+3、[配置日志输出](doc/guide/03-logger.md)。
 
-4、[版本历史](https://github.com/aofeng/threadpool4j/wiki/%E7%89%88%E6%9C%AC%E5%8E%86%E5%8F%B2)。
+4、[版本历史](doc/guide/04-history.md)。
 
