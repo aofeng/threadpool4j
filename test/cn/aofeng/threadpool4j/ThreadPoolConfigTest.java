@@ -2,6 +2,8 @@ package cn.aofeng.threadpool4j;
 
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -162,4 +164,21 @@ public class ThreadPoolConfigTest {
         assertEquals(100, _threadPoolConfig._threadStateInterval);
     }
 
+    @Test
+    public void testContainsPool() {
+        _threadPoolConfig._configFile = "/cn/aofeng/threadpool4j/threadpool4j_2.1.0_no_default_pool.xml";
+        _threadPoolConfig.init();
+        
+        // 配置不为空，但指定的线程池不存在
+        assertFalse( _threadPoolConfig.containsPool("NOT_EXISTS_1") );
+        
+        // 配置不为空，指定的线程池存在
+        assertTrue( _threadPoolConfig.containsPool("hello") );
+        
+        // 配置为空，任何线程池都不存在
+        _threadPoolConfig._multiThreadPoolInfo = new HashMap<String, ThreadPoolInfo>();
+        assertEquals(0, _threadPoolConfig._multiThreadPoolInfo.size());
+        assertFalse(_threadPoolConfig.containsPool("hello"));
+    }
+    
 }
