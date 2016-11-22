@@ -32,11 +32,12 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
 
     private static Logger _logger = Logger.getLogger(ThreadPoolImpl.class);    
     
-    ThreadPoolConfig _threadPoolConfig = new ThreadPoolConfig();
+    protected ThreadPoolConfig _threadPoolConfig = new ThreadPoolConfig();
+    protected int _initStatus = ThreadPoolStatus.UNINITIALIZED;
     
     Map<String, ExecutorService> _multiThreadPool = new HashMap<String, ExecutorService>();
-    private ThreadPoolStateJob _threadPoolStateJob;
-    private ThreadStateJob _threadStateJob;
+    ThreadPoolStateJob _threadPoolStateJob;
+    ThreadStateJob _threadStateJob;
     
     public ThreadPoolImpl() {
         // nothing
@@ -44,9 +45,20 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
     
     @Override
     public void init() {
-        initThreadPool();
-        startThreadPoolStateJob();
-        startThreadStateJob();
+        if (ThreadPoolStatus.UNINITIALIZED != _initStatus) {
+            _logger.warn( String.format("initialization thread pool failed, because the status was wrong, current status was %d (0:UNINITIALIZED, 1:INITIALITION_SUCCESSFUL, 2:INITIALITION_FAILED, 3:DESTROYED)", _initStatus) );
+            return;
+        }
+        
+        try {
+            initThreadPool();
+            startThreadPoolStateJob();
+            startThreadStateJob();
+            _initStatus = ThreadPoolStatus.INITIALITION_SUCCESSFUL;
+        } catch (RuntimeException e) {
+            _initStatus = ThreadPoolStatus.INITIALITION_FAILED;
+            throw e;
+        }
     }
     
     /**
@@ -201,6 +213,10 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
     
     @Override
     public void destroy() {
+        if (ThreadPoolStatus.DESTROYED == _initStatus) {
+            return;
+        }
+        
         for (Entry<String, ExecutorService> entry : _multiThreadPool.entrySet()) {
             _logger.info("shutdown the thread pool "+entry.getKey());
             entry.getValue().shutdown();
@@ -219,6 +235,7 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
         }
         
         _threadPoolConfig.destroy();
+        _initStatus = ThreadPoolStatus.DESTROYED;
     }
 
 }

@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -32,6 +33,7 @@ public class ThreadPoolTest {
     
     @Before
     public void setUp() throws Exception {
+        _threadPool._initStatus = ThreadPoolStatus.UNINITIALIZED;
         _threadPool._threadPoolConfig._configFile = ThreadPoolConfig.DEFAULT_CONFIG_FILE;
         _threadPool.init();
     }
@@ -51,12 +53,26 @@ public class ThreadPoolTest {
     
     @Test
     public void testDestroy() {
-        String configFile = "/cn/aofeng/threadpool4j/threadpool4j_1.5.0_closethreadstate.xml";
-        
+        // 先销毁加载默认配置的线程池
         _threadPool.destroy();
+        assertEquals(ThreadPoolStatus.DESTROYED, _threadPool._initStatus);
+        assertNull(_threadPool._threadPoolStateJob);
+        assertNull(_threadPool._threadStateJob);
+        for (Entry<String, ExecutorService> entry : _threadPool._multiThreadPool.entrySet()) {
+            assertTrue(entry.getValue().isShutdown());
+        }
+        
+        // 加载指定配置文件的线程池，初始化后再销毁
+        String configFile = "/cn/aofeng/threadpool4j/threadpool4j_1.5.0_closethreadstate.xml";
         _threadPool._threadPoolConfig._configFile = configFile;
         _threadPool.init();
         _threadPool.destroy();
+        assertEquals(ThreadPoolStatus.DESTROYED, _threadPool._initStatus);
+        assertNull(_threadPool._threadPoolStateJob);
+        assertNull(_threadPool._threadStateJob);
+        for (Entry<String, ExecutorService> entry : _threadPool._multiThreadPool.entrySet()) {
+            assertTrue(entry.getValue().isShutdown());
+        }
     }
     
     /**
@@ -81,6 +97,7 @@ public class ThreadPoolTest {
         
         _threadPool.destroy();
         _threadPool._threadPoolConfig._configFile = configFile;
+        _threadPool._initStatus = ThreadPoolStatus.UNINITIALIZED;
         _threadPool.init();
     }
     
