@@ -31,6 +31,15 @@
                 value="%d{yyyy-MM-dd HH:mm:ss} ~ %m%n" />
         </layout>
     </appender>
+    
+    <appender name="threadstack"
+        class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="logs/threadpool4j-threadstack.log" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                value="%d{yyyy-MM-dd HH:mm:ss} ~ %m%n" />
+        </layout>
+    </appender>
 	
 	<logger name="cn.aofeng.threadpool4j.job.ThreadPoolStateJob" additivity="false" >
        <level value="info"></level>
@@ -40,6 +49,11 @@
 	<logger name="cn.aofeng.threadpool4j.job.ThreadStateJob" additivity="false" >
        <level value="info"></level>
        <appender-ref ref="threadstate"/>
+    </logger>
+    
+    <logger name="cn.aofeng.threadpool4j.job.ThreadStackJob" additivity="false" >
+       <level value="info"></level>
+       <appender-ref ref="threadstack"/>
     </logger>
     
 	<root>

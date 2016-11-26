@@ -18,6 +18,7 @@ import org.apache.log4j.Logger;
 import cn.aofeng.common4j.ILifeCycle;
 import cn.aofeng.common4j.lang.StringUtil;
 import cn.aofeng.threadpool4j.job.ThreadPoolStateJob;
+import cn.aofeng.threadpool4j.job.ThreadStackJob;
 import cn.aofeng.threadpool4j.job.ThreadStateJob;
 
 /**
@@ -38,6 +39,7 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
     Map<String, ExecutorService> _multiThreadPool = new HashMap<String, ExecutorService>();
     ThreadPoolStateJob _threadPoolStateJob;
     ThreadStateJob _threadStateJob;
+    ThreadStackJob _threadStackJob;
     
     public ThreadPoolImpl() {
         // nothing
@@ -54,6 +56,7 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
             initThreadPool();
             startThreadPoolStateJob();
             startThreadStateJob();
+            startThreadStackJob();
             _initStatus = ThreadPoolStatus.INITIALITION_SUCCESSFUL;
         } catch (RuntimeException e) {
             _initStatus = ThreadPoolStatus.INITIALITION_FAILED;
@@ -84,32 +87,48 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
      * 初始化并启动线程池状态统计Job。
      */
     private void startThreadPoolStateJob() {
-        if (_threadPoolConfig.getThreadPoolStateSwitch()) {
-            _threadPoolStateJob = new ThreadPoolStateJob(
-                    _multiThreadPool,
-                    _threadPoolConfig.getThreadPoolStateInterval() );
-            _threadPoolStateJob.init();
-            Thread jobThread = new Thread(_threadPoolStateJob);
-            jobThread.setName("threadpool4j-threadpoolstate");
-            jobThread.start();
-            
-            _logger.info("start  job 'threadpool4j-threadpoolstate' success");
+        if (! _threadPoolConfig.getThreadPoolStateSwitch()) {
+            return;
         }
+        
+        _threadPoolStateJob = new ThreadPoolStateJob(
+                _multiThreadPool,
+                _threadPoolConfig.getThreadPoolStateInterval() );
+        _threadPoolStateJob.init();
+        Thread jobThread = new Thread(_threadPoolStateJob);
+        jobThread.setName("threadpool4j-threadpoolstate");
+        jobThread.start();
+        
+        _logger.info("start  job 'threadpool4j-threadpoolstate' success");
     }
     
     /**
      * 初始化并启动线程状态统计Job。
      */
     private void startThreadStateJob() {
-        if (_threadPoolConfig.getThreadStateSwitch()) {
-            _threadStateJob = new ThreadStateJob(_threadPoolConfig.getThreadStateInterval());
-            _threadStateJob.init();
-            Thread jobThread = new Thread(_threadStateJob);
-            jobThread.setName("threadpool4j-threadstate");
-            jobThread.start();
-            
-            _logger.info("start job 'threadpool4j-threadstate' success");
+        if (! _threadPoolConfig.getThreadStateSwitch()) {
+            return;
         }
+        
+        _threadStateJob = new ThreadStateJob(_threadPoolConfig.getThreadStateInterval());
+        _threadStateJob.init();
+        Thread jobThread = new Thread(_threadStateJob);
+        jobThread.setName("threadpool4j-threadstate");
+        jobThread.start();
+        
+        _logger.info("start job 'threadpool4j-threadstate' success");
+    }
+    
+    private void startThreadStackJob() {
+        if (! _threadPoolConfig.getThreadStackSwitch()) {
+            return;
+        }
+        
+        _threadStackJob = new ThreadStackJob(_threadPoolConfig.getThreadStackInterval());
+        _threadStackJob.init();
+        Thread jobThread = new Thread(_threadStackJob);
+        jobThread.setName("threadpool4j-threadstack");
+        jobThread.start();
     }
     
     public Future<?> submit(Runnable task) {
@@ -232,6 +251,12 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
             _threadStateJob.destroy();
             _logger.info("stop job 'threadpool4j-threadstate' success");
             _threadStateJob = null;
+        }
+        
+        if (null != _threadStackJob) {
+            _threadStackJob.destroy();
+            _logger.info("stop job 'threadpool4j-threadstack' success");
+            _threadStackJob = null;
         }
         
         _threadPoolConfig.destroy();

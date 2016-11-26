@@ -10,27 +10,27 @@
 	</pool>
 
 	<pool name="other">
-		<corePoolSize>10</corePoolSize>
-		<maxPoolSize>100</maxPoolSize>
-		<keepAliveTime>15</keepAliveTime>
-		<workQueueSize>100000</workQueueSize>
+		<corePoolSize>20</corePoolSize>
+		<maxPoolSize>200</maxPoolSize>
+		<keepAliveTime>25</keepAliveTime>
+		<workQueueSize>200000</workQueueSize>
 	</pool>
 
     <!-- 线程池状态收集汇总配置
     switch: on-开; off-关
     interval: 单位(秒)
      -->
-    <threadpoolstate switch="on" interval="60"></threadpoolstate>
+    <threadpoolstate switch="on" interval="160"></threadpoolstate>
 
     <!-- 线程状态收集汇总配置
     switch: on-开; off-关
     interval: 单位(秒)
      -->
-    <threadstate switch="on" interval="60"></threadstate>
+    <threadstate switch="oFf" interval="260"></threadstate>
     
     <!-- 线程堆栈收集配置
     switch: on-开; off-关
     interval: 单位(秒)
      -->
-    <threadstack switch="on" interval="60"></threadstack>
+    <threadstack switch="off" interval="360"></threadstack>
 </threadpool4j>

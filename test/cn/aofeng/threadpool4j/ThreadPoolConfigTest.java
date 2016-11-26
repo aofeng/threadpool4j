@@ -61,13 +61,17 @@ public class ThreadPoolConfigTest {
         assertEquals(10, otherInfo.getThreadKeepAliveTime());
         assertEquals(10000, otherInfo.getQueueSize());
         
-        // 线程池状态统计配置信息
+        // 线程池状态收集配置信息
         assertFalse(_threadPoolConfig._threadPoolStateSwitch);
         assertEquals(60, _threadPoolConfig._threadPoolStateInterval);
         
-        // 线程状态统计配置信息
+        // 线程状态收集配置信息
         assertFalse(_threadPoolConfig._threadStateSwitch);
         assertEquals(60, _threadPoolConfig._threadStateInterval);
+        
+        // 线程堆栈收集配置信息
+        assertFalse(_threadPoolConfig._threadStackSwitch);
+        assertEquals(60, _threadPoolConfig._threadStackInterval);
     }
     
     /**
@@ -115,6 +119,10 @@ public class ThreadPoolConfigTest {
         // 线程状态统计配置信息
         assertTrue(_threadPoolConfig._threadStateSwitch);
         assertEquals(180, _threadPoolConfig._threadStateInterval);
+        
+        // 线程堆栈收集配置信息
+        assertFalse(_threadPoolConfig._threadStackSwitch);
+        assertEquals(60, _threadPoolConfig._threadStackInterval);
     }
     
     /**
@@ -162,6 +170,61 @@ public class ThreadPoolConfigTest {
         // 线程状态统计配置信息
         assertFalse(_threadPoolConfig._threadStateSwitch);
         assertEquals(100, _threadPoolConfig._threadStateInterval);
+        
+        // 线程堆栈收集配置信息
+        assertFalse(_threadPoolConfig._threadStackSwitch);
+        assertEquals(60, _threadPoolConfig._threadStackInterval);
+    }
+    
+    /**
+     * 测试用例：读取线程池配置文件 <br/>
+     * 前置条件：
+     * <pre>
+     * 1、2.2.0版本的配置文件
+     * 2、有线程池状态输出开关（threadpoolstate节点），配置为on
+     * 3、有线程状态输出开关（threadstate节点），配置为on
+     * </pre>
+     * 
+     * 测试结果：
+     * <pre>
+     * 1、有两个线程池的配置信息，分别是default和other。
+     * 2、线程池状态输出开关的值为true，输出间隔为120秒。
+     * 3、线程状态输出开关的值为true，输出间隔为180秒。
+     * </pre>
+     */
+    @Test
+    public void testInit42_5_0() {
+        _threadPoolConfig._configFile = "/cn/aofeng/threadpool4j/threadpool4j_2.5.0.xml";
+        _threadPoolConfig.init();
+        assertEquals(2, _threadPoolConfig._multiThreadPoolInfo.size());
+        
+        // default线程池配置信息
+        assertTrue(_threadPoolConfig._multiThreadPoolInfo.containsKey("default"));
+        ThreadPoolInfo defaultInfo = _threadPoolConfig._multiThreadPoolInfo.get("default");
+        assertEquals(10, defaultInfo.getCoreSize());
+        assertEquals(100, defaultInfo.getMaxSize());
+        assertEquals(15, defaultInfo.getThreadKeepAliveTime());
+        assertEquals(100000, defaultInfo.getQueueSize());
+        
+        // other线程池配置信息
+        assertTrue(_threadPoolConfig._multiThreadPoolInfo.containsKey("other"));
+        ThreadPoolInfo otherInfo = _threadPoolConfig._multiThreadPoolInfo.get("other");
+        assertEquals(20, otherInfo.getCoreSize());
+        assertEquals(200, otherInfo.getMaxSize());
+        assertEquals(25, otherInfo.getThreadKeepAliveTime());
+        assertEquals(200000, otherInfo.getQueueSize());
+        
+        // 线程池状态统计配置信息
+        assertTrue(_threadPoolConfig._threadPoolStateSwitch);
+        assertEquals(160, _threadPoolConfig._threadPoolStateInterval);
+        
+        // 线程状态统计配置信息
+        assertFalse(_threadPoolConfig._threadStateSwitch);
+        assertEquals(260, _threadPoolConfig._threadStateInterval);
+        
+        // 线程堆栈收集配置信息
+        assertFalse(_threadPoolConfig._threadStackSwitch);
+        assertEquals(360, _threadPoolConfig._threadStackInterval);
     }
 
     @Test

@@ -17,10 +17,8 @@ public class ThreadStateJob extends AbstractJob {
 
     private static Logger _logger = Logger.getLogger(ThreadStateJob.class);
     
-    private int _interval = 60;
-    
     public ThreadStateJob(int interval) {
-        this._interval = interval;
+        super._interval = interval;
     }
 
     @Override
@@ -34,11 +32,7 @@ public class ThreadStateJob extends AbstractJob {
                     stateInfo.getWaitingCount(), stateInfo.getTimedWaitingCount(), stateInfo.getTerminatedCount()) );
         }
         
-        try {
-            Thread.sleep(_interval * 1000);
-        } catch (InterruptedException e) {
-            // nothing
-        }
+        super.sleep();
     } // end of execute
 
 }

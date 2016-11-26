@@ -19,11 +19,9 @@ public class ThreadPoolStateJob extends AbstractJob {
     
     private Map<String, ExecutorService> _multiThreadPool;
     
-    private int _interval = 60;
-    
     public ThreadPoolStateJob(Map<String, ExecutorService> multiThreadPool, int interval) {
         this._multiThreadPool = multiThreadPool;
-        this._interval = interval;
+        super._interval = interval;
     }
     
     @Override
@@ -35,11 +33,7 @@ public class ThreadPoolStateJob extends AbstractJob {
                     entry.getKey(), pool.getActiveCount(), pool.getTaskCount(), pool.getCompletedTaskCount(), pool.getQueue().size()) );
         }
         
-        try {
-            Thread.sleep(_interval * 1000);
-        } catch (InterruptedException e) {
-            // nothing
-        }
+        super.sleep();
     }
 
 }
