@@ -5,6 +5,8 @@ import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 
+import cn.aofeng.common4j.lang.SystemUtil;
+
 /**
  * 收集所有线程的堆栈信息并输出到文件。
  * 
@@ -14,7 +16,7 @@ public class ThreadStackJob extends AbstractJob {
 
     private static Logger _logger = Logger.getLogger(ThreadStackJob.class);
     
-    private String _lineSeparator = System.getProperty("line.separator", "/n");
+    private String _lineSeparator = SystemUtil.getEndLine();
     
     public ThreadStackJob(int interval) {
         super._interval = interval;
