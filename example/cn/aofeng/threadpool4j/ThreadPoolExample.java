@@ -7,8 +7,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import cn.aofeng.common4j.ILifeCycle;
-
 /**
  * 多线程池调用代码示例。
  * 
@@ -17,16 +15,15 @@ import cn.aofeng.common4j.ILifeCycle;
 public class ThreadPoolExample {
     
     public static void main(String[] args) throws Exception {
-        ThreadPoolImpl temp = new ThreadPoolImpl();
-        ILifeCycle th = temp;
-        th.init();
+        ThreadPoolManager tpm = ThreadPoolManager.getSingleton();
+        ThreadPool threadPool = tpm.getThreadPool();
+        tpm.init(); // 在应用启动时调用
         
-        ThreadPool threadPool = temp;
         executeRunnableAnsyTask(threadPool);
         executeCallableAnsyTask(threadPool);
         parallelExecuteAnsyTask(threadPool);
         
-        th.destroy();
+        tpm.destroy(); // 在应用关闭时调用
     }
 
     /**
