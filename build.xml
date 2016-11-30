@@ -1,6 +1,6 @@
 <project name="threadpool4j" basedir="." default="all">
     <property name="project_name" value="threadpool4j"></property>
-    <property name="project_version" value="2.1.0"></property>
+    <property name="project_version" value="2.5.0"></property>
     <property name="package_name" value="${project_name}-${project_version}"></property>
 	<property name="author" value="NieYong"></property>
 	<property name="organization" value="cn.aofeng"></property>
