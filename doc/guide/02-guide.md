@@ -13,19 +13,37 @@
 <threadpool4j>
     <!-- 至少要有一个线程池default -->
     <pool name="default">
-        <corePoolSize>30</corePoolSize>
-        <maxPoolSize>150</maxPoolSize>
+        <corePoolSize>10</corePoolSize>
+        <maxPoolSize>100</maxPoolSize>
         <!-- 线程空闲存话的时间。单位：秒 -->
-        <keepAliveTime>5</keepAliveTime>
+        <keepAliveTime>15</keepAliveTime>
         <workQueueSize>100000</workQueueSize>
     </pool>
 
     <pool name="other">
         <corePoolSize>10</corePoolSize>
         <maxPoolSize>100</maxPoolSize>
-        <keepAliveTime>10</keepAliveTime>
-        <workQueueSize>10000</workQueueSize>
+        <keepAliveTime>15</keepAliveTime>
+        <workQueueSize>100000</workQueueSize>
     </pool>
+
+    <!-- 线程池状态收集汇总配置
+    switch: on-开; off-关
+    interval: 单位(秒)
+     -->
+    <threadpoolstate switch="on" interval="60"></threadpoolstate>
+
+    <!-- 线程状态收集汇总配置
+    switch: on-开; off-关
+    interval: 单位(秒)
+     -->
+    <threadstate switch="on" interval="60"></threadstate>
+    
+    <!-- 线程堆栈收集配置
+    switch: on-开; off-关
+    interval: 单位(秒)
+     -->
+    <threadstack switch="on" interval="60"></threadstack>
 </threadpool4j>
 ```
 
