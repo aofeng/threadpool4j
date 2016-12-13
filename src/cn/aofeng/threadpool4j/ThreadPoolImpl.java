@@ -10,6 +10,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -34,7 +35,7 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
     private static Logger _logger = Logger.getLogger(ThreadPoolImpl.class);    
     
     protected ThreadPoolConfig _threadPoolConfig = new ThreadPoolConfig();
-    protected int _initStatus = ThreadPoolStatus.UNINITIALIZED;
+    protected int _status = ThreadPoolStatus.UNINITIALIZED;
     
     Map<String, ExecutorService> _multiThreadPool = new HashMap<String, ExecutorService>();
     ThreadPoolStateJob _threadPoolStateJob;
@@ -47,8 +48,8 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
     
     @Override
     public void init() {
-        if (ThreadPoolStatus.UNINITIALIZED != _initStatus) {
-            _logger.warn( String.format("initialization thread pool failed, because the status was wrong, current status was %d (0:UNINITIALIZED, 1:INITIALITION_SUCCESSFUL, 2:INITIALITION_FAILED, 3:DESTROYED)", _initStatus) );
+        if (ThreadPoolStatus.UNINITIALIZED != _status) {
+            _logger.warn( String.format("initialization thread pool failed, because the status was wrong, current status was %d (0:UNINITIALIZED, 1:INITIALITION_SUCCESSFUL, 2:INITIALITION_FAILED, 3:DESTROYED)", _status) );
             return;
         }
         
@@ -57,9 +58,9 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
             startThreadPoolStateJob();
             startThreadStateJob();
             startThreadStackJob();
-            _initStatus = ThreadPoolStatus.INITIALITION_SUCCESSFUL;
+            _status = ThreadPoolStatus.INITIALITION_SUCCESSFUL;
         } catch (RuntimeException e) {
-            _initStatus = ThreadPoolStatus.INITIALITION_FAILED;
+            _status = ThreadPoolStatus.INITIALITION_FAILED;
             throw e;
         }
     }
@@ -147,7 +148,21 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
         
         return threadPool.submit(task);
     }
-
+    
+    @Override
+    public Future<?> submit(Runnable task, String threadpoolName, 
+            FailHandler<Runnable> failHandler) {
+        try {
+            return submit(task, threadpoolName);
+        } catch (RejectedExecutionException e) {
+            if (null != failHandler) {
+                failHandler.execute(task);
+            }
+        }
+        
+        return null;
+    }
+    
     private ExecutorService getThreadPool(String threadpoolName) {
         if (StringUtil.isBlank(threadpoolName)) {
             throw new IllegalArgumentException("thread pool name is empty");
@@ -184,6 +199,20 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
         }
         
         return threadPool.submit(task);
+    }
+    
+    @Override
+    public <T> Future<T> submit(Callable<T> task, String threadpoolName, 
+            FailHandler<Callable<T>> failHandler) {
+        try {
+            return submit(task, threadpoolName);
+        } catch (RejectedExecutionException e) {
+            if (null != failHandler) {
+                failHandler.execute(task);
+            }
+        }
+        
+        return null;
     }
     
     @Override
@@ -232,7 +261,7 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
     
     @Override
     public void destroy() {
-        if (ThreadPoolStatus.DESTROYED == _initStatus) {
+        if (ThreadPoolStatus.DESTROYED == _status) {
             return;
         }
         
@@ -260,7 +289,7 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
         }
         
         _threadPoolConfig.destroy();
-        _initStatus = ThreadPoolStatus.DESTROYED;
+        _status = ThreadPoolStatus.DESTROYED;
     }
 
 }

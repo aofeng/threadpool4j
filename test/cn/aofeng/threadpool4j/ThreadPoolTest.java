@@ -33,7 +33,7 @@ public class ThreadPoolTest {
     
     @Before
     public void setUp() throws Exception {
-        _threadPool._initStatus = ThreadPoolStatus.UNINITIALIZED;
+        _threadPool._status = ThreadPoolStatus.UNINITIALIZED;
         _threadPool._threadPoolConfig._configFile = ThreadPoolConfig.DEFAULT_CONFIG_FILE;
         _threadPool.init();
     }
@@ -55,7 +55,7 @@ public class ThreadPoolTest {
     public void testDestroy() {
         // 先销毁加载默认配置的线程池
         _threadPool.destroy();
-        assertEquals(ThreadPoolStatus.DESTROYED, _threadPool._initStatus);
+        assertEquals(ThreadPoolStatus.DESTROYED, _threadPool._status);
         assertNull(_threadPool._threadPoolStateJob);
         assertNull(_threadPool._threadStateJob);
         for (Entry<String, ExecutorService> entry : _threadPool._multiThreadPool.entrySet()) {
@@ -67,7 +67,7 @@ public class ThreadPoolTest {
         _threadPool._threadPoolConfig._configFile = configFile;
         _threadPool.init();
         _threadPool.destroy();
-        assertEquals(ThreadPoolStatus.DESTROYED, _threadPool._initStatus);
+        assertEquals(ThreadPoolStatus.DESTROYED, _threadPool._status);
         assertNull(_threadPool._threadPoolStateJob);
         assertNull(_threadPool._threadStateJob);
         for (Entry<String, ExecutorService> entry : _threadPool._multiThreadPool.entrySet()) {
@@ -97,7 +97,7 @@ public class ThreadPoolTest {
         
         _threadPool.destroy();
         _threadPool._threadPoolConfig._configFile = configFile;
-        _threadPool._initStatus = ThreadPoolStatus.UNINITIALIZED;
+        _threadPool._status = ThreadPoolStatus.UNINITIALIZED;
         _threadPool.init();
     }
     
@@ -242,7 +242,7 @@ public class ThreadPoolTest {
         
         verify(mock);
     }
-
+    
     private void callThreadPool(String threadpoolName) {
         ExecutorService mock = createMock(ExecutorService.class);
         mock.submit(anyObject(Runnable.class));

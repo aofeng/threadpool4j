@@ -21,6 +21,7 @@ public interface ThreadPool {
      * @param task 实现了{@link Runnable}接口的异步任务
      * @return 异步任务执行的结果
      * @throws IllegalArgumentException 指定的任务（<code>task</code>）为null
+     * @throws RejectedExecutionException 当队列满，异步任务无法提交给线程池执行时抛出此异常
      * @see #submit(Runnable, String)
      */
     public Future<?> submit(Runnable task);
@@ -37,8 +38,26 @@ public interface ThreadPool {
      *     <li>指定的线程池名称（<code>threadpoolName</code>）为null，""或全是空白字符；</li>
      *     <li>指定的线程池不存在。</li>
      * </ul>
+     * @throws RejectedExecutionException 当队列满，异步任务无法提交给线程池执行时抛出此异常
      */
     public Future<?> submit(Runnable task, String threadpoolName);
+    
+    /**
+     * 提交一个不需要返回值的异步任务给指定的线程池执行。
+     * 
+     * @param task 实现了{@link Runnable}接口的异步任务
+     * @param threadpoolName 线程池名称
+     * @param failHandler 当队列满，异步任务无法提交给线程池执行的"失败处理器"
+     * @return 异步任务执行的结果。如果队列满导致任务无法提交，将返回null
+     * @throws IllegalArgumentException 出现以下情况时抛出：
+     * <ul>
+     *     <li>指定的任务（<code>task</code>）为null；</li>
+     *     <li>指定的线程池名称（<code>threadpoolName</code>）为null，""或全是空白字符；</li>
+     *     <li>指定的线程池不存在。</li>
+     * </ul>
+     */
+    public Future<?> submit(Runnable task, String threadpoolName, 
+            FailHandler<Runnable> failHandler);
     
     /**
      * 提交一个需要返回值的异步任务给默认的线程池执行。
@@ -46,6 +65,7 @@ public interface ThreadPool {
      * @param task 实现了{@link Callable}接口的异步任务
      * @return 异步任务执行的结果
      * @throws IllegalArgumentException 指定的任务（<code>task</code>）为null
+     * @throws RejectedExecutionException 当队列满，异步任务无法提交给线程池执行时抛出此异常
      * @see #submit(Callable, String)
      */
     public <T> Future<T> submit(Callable<T> task);
@@ -62,8 +82,26 @@ public interface ThreadPool {
      *     <li>指定的线程池名称（<code>threadpoolName</code>）为null，""或全是空白字符；</li>
      *     <li>指定的线程池不存在。</li>
      * </ul>
+     * @throws RejectedExecutionException 当队列满，异步任务无法提交给线程池执行时抛出此异常
      */
     public <T> Future<T> submit(Callable<T> task, String threadpoolName);
+    
+    /**
+     * 提交一个需要返回值的异步任务给指定的线程池执行。
+     * 
+     * @param task 实现了{@link Callable}接口的异步任务
+     * @param threadpoolName 线程池名称
+     * @param failHandler 当队列满，异步任务无法提交给线程池执行的"失败处理器"
+     * @return 异步任务执行的结果。如果队列满导致任务无法提交，将返回null
+     * @throws IllegalArgumentException 出现以下情况时抛出：
+     * <ul>
+     *     <li>指定的任务（<code>task</code>）为null；</li>
+     *     <li>指定的线程池名称（<code>threadpoolName</code>）为null，""或全是空白字符；</li>
+     *     <li>指定的线程池不存在。</li>
+     * </ul>
+     */
+    public <T> Future<T> submit(Callable<T> task, String threadpoolName, 
+            FailHandler<Callable<T>> failHandler);
     
     /**
      * 在线程池"default"中执行多个需要返回值的异步任务，并设置超时时间。
