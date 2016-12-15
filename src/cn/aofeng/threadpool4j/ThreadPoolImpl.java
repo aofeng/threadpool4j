@@ -163,7 +163,7 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
         return null;
     }
     
-    private ExecutorService getThreadPool(String threadpoolName) {
+    ExecutorService getThreadPool(String threadpoolName) {
         if (StringUtil.isBlank(threadpoolName)) {
             throw new IllegalArgumentException("thread pool name is empty");
         }

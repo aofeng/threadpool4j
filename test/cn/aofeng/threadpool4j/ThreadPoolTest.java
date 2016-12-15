@@ -9,15 +9,17 @@ import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 
-import static org.easymock.EasyMock.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.mockito.Mockito;
 
 /**
  * {@link ThreadPoolImpl}的单元测试用例。
@@ -233,25 +235,52 @@ public class ThreadPoolTest {
      */
     @Test
     public void testSubmitRunnableString4RunTask() throws InterruptedException {
-        Runnable mock = createMock(Runnable.class);
-        mock.run();
-        expectLastCall().once(); // 期望任务的run方法被调用1次
-        replay(mock);
+        Runnable mock = Mockito.mock(Runnable.class);
+        Mockito.doNothing().when(mock).run();
         _threadPool.submit(mock, "default");
         Thread.sleep(1000); // 异步操作，需等待一会儿
         
-        verify(mock);
+        Mockito.verify(mock, Mockito.times(1)).run();
+    }
+    
+    /**
+     * 测试用例：队列满，执行失败处理器 <br/>
+     * 前置条件：
+     * <pre>
+     * 任务对象为{@link Runnable}，提交给线程池名"default"执行。队列满，抛出{@link RejectedExecutionException}
+     * </pre>
+     * 
+     * 测试结果：
+     * <pre>
+     * 任务对象的run方法被调用1次；失败处理器被执行1次。
+     * </pre>
+     * @throws InterruptedException 
+     */
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testSubmitRunnableStringFailHandler() throws InterruptedException {
+        String threadpoolName = "defalut";
+        Runnable taskMock = Mockito.mock(Runnable.class);
+        FailHandler<Runnable> handlerMock = Mockito.mock(FailHandler.class);
+        
+        ThreadPoolImpl threadPoolMockImpl = Mockito.spy(_threadPool);
+        Mockito.when(threadPoolMockImpl.getThreadPool(threadpoolName)).thenReturn(Executors.newSingleThreadExecutor());
+        Mockito.when(threadPoolMockImpl.submit(taskMock, threadpoolName)).thenThrow(RejectedExecutionException.class);
+        
+        threadPoolMockImpl.submit(taskMock, threadpoolName, handlerMock);
+        Thread.sleep(1000); // 异步操作，需等待一会儿
+        
+        Mockito.verify(taskMock, Mockito.times(1)).run(); // 期望任务的run方法被调用1次
+        Mockito.verify(handlerMock, Mockito.times(1)).execute(taskMock); // 期望失败处理器的execute方法被调用1次
     }
     
     private void callThreadPool(String threadpoolName) {
-        ExecutorService mock = createMock(ExecutorService.class);
-        mock.submit(anyObject(Runnable.class));
-        expectLastCall().andReturn(null).once();   // 期望线程池的submit方法被调用1次
-        replay(mock);
+        ExecutorService mock = Mockito.mock(ExecutorService.class);
+        Mockito.when(mock.submit(Mockito.any(Runnable.class))).thenReturn(null);
         _threadPool._multiThreadPool.put(threadpoolName, mock);
         _threadPool.submit(createRunnable(), threadpoolName);
         
-        verify(mock);
+        Mockito.verify(mock, Mockito.times(1)).submit(Mockito.any(Runnable.class));
     }
 
     private Runnable createRunnable() {
@@ -362,15 +391,43 @@ public class ThreadPoolTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testSubmitCallableString4RunTask() throws Exception {
-        Callable<List<String>> mock = createMock(Callable.class);
-        List<String> returnMock = createMock(List.class);
-        mock.call();
-        expectLastCall().andReturn(returnMock).once(); // 期望任务的call方法被调用1次
-        replay(mock);
+        Callable<List<String>> mock = Mockito.mock(Callable.class);
+        Mockito.when(mock.call()).thenReturn(new ArrayList<String>());
         _threadPool.submit(mock, "default");
         Thread.sleep(1000); // 异步操作，需等待一会儿
         
-        verify(mock);
+        Mockito.verify(mock, Mockito.times(1)).call();
+    }
+    
+    /**
+     * 测试用例：队列满，执行失败处理器 <br/>
+     * 前置条件：
+     * <pre>
+     * 任务对象为{@link Callable}，提交给线程池名"default"执行。队列满，抛出{@link RejectedExecutionException}
+     * </pre>
+     * 
+     * 测试结果：
+     * <pre>
+     * 任务对象的run方法被调用1次；失败处理器被执行1次。
+     * </pre>
+     * @throws Exception 
+     */
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testSubmitCallableStringFailHandler() throws Exception {
+        String threadpoolName = "defalut";
+        Callable<Object> taskMock = Mockito.mock(Callable.class);
+        FailHandler<Callable<Object>> handlerMock = Mockito.mock(FailHandler.class);
+        
+        ThreadPoolImpl threadPoolMockImpl = Mockito.spy(_threadPool);
+        Mockito.when(threadPoolMockImpl.getThreadPool(threadpoolName)).thenReturn(Executors.newSingleThreadExecutor());
+        Mockito.when(threadPoolMockImpl.submit(taskMock, threadpoolName)).thenThrow(RejectedExecutionException.class);
+        
+        threadPoolMockImpl.submit(taskMock, threadpoolName, handlerMock);
+        Thread.sleep(1000); // 异步操作，需等待一会儿
+        
+        Mockito.verify(taskMock, Mockito.times(1)).call(); // 期望任务的run方法被调用1次
+        Mockito.verify(handlerMock, Mockito.times(1)).execute(taskMock); // 期望失败处理器的execute方法被调用1次
     }
     
     /**
