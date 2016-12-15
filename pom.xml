@@ -1,70 +1,97 @@
 <project>
-    <modelVersion>4.0.0</modelVersion>
-    
-    <groupId>cn.aofeng</groupId>
-    <artifactId>threadpool4j</artifactId>
-    <version>2.5.0</version>
-    <name>threadpool4j</name>
-    <url>https://github.com/aofeng/threadpool4j</url>
-    
-    <organization>
-        <name>cn.aofeng</name>
-        <url>https://github.com/aofeng/threadpool4j</url>
-    </organization>
-    
-    <licenses>
-        <license>
-            <name>Apache License Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
-        </license>
-    </licenses>
-    
-    <developers>
-        <developer>
-            <id>aofeng</id>
-            <name>NieYong</name>
-            <email>aofengblog@163.com</email>
-        </developer>
-    </developers>
-    
-    <packaging>jar</packaging>
-    
-    <dependencies>
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>cn.aofeng</groupId>
+	<artifactId>threadpool4j</artifactId>
+	<version>3.0.0</version>
+	<name>threadpool4j</name>
+	<url>https://github.com/aofeng/threadpool4j</url>
+
+	<organization>
+		<name>cn.aofeng</name>
+		<url>https://github.com/aofeng/threadpool4j</url>
+	</organization>
+
+	<licenses>
+		<license>
+			<name>Apache License Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>aofeng</id>
+			<name>NieYong</name>
+			<email>aofengblog@163.com</email>
+		</developer>
+	</developers>
+
+	<packaging>jar</packaging>
+
+	<dependencies>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.16</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.6</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>cn.aofeng</groupId>
+			<artifactId>common4j</artifactId>
+			<version>0.2.2</version>
+			<scope>compile</scope>
+		</dependency>
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.16</version>
-            <scope>compile</scope>
+        	<groupId>junit</groupId>
+        	<artifactId>junit</artifactId>
+        	<version>4.12</version>
         </dependency>
         <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.6</version>
-            <scope>compile</scope>
+        	<groupId>net.bytebuddy</groupId>
+        	<artifactId>byte-buddy</artifactId>
+        	<version>1.2.1</version>
         </dependency>
         <dependency>
-            <groupId>cn.aofeng</groupId>
-            <artifactId>common4j</artifactId>
-            <version>0.2.2</version>
-            <scope>compile</scope>
+            <groupId>cglib</groupId>
+            <artifactId>cglib-nodep</artifactId>
+            <version>2.2.2</version>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
-            <scope>test</scope>
+        	<groupId>org.easymock</groupId>
+        	<artifactId>easymock</artifactId>
+        	<version>3.4</version>
         </dependency>
         <dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymock</artifactId>
-            <version>3.1</version>
-            <scope>test</scope>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-core</artifactId>
+            <version>1.3</version>
         </dependency>
         <dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymockclassextension</artifactId>
-            <version>3.1</version>
-            <scope>test</scope>
+        	<groupId>org.javassist</groupId>
+        	<artifactId>javassist</artifactId>
+        	<version>3.21.0-GA</version>
+        </dependency>
+        <dependency>
+        	<groupId>org.mockito</groupId>
+        	<artifactId>mockito-core</artifactId>
+        	<version>2.0.42-beta</version>
+        </dependency>
+        <dependency>
+        	<groupId>org.objenesis</groupId>
+        	<artifactId>objenesis</artifactId>
+        	<version>2.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito2</artifactId>
+            <version>1.6.6</version>
         </dependency>
     </dependencies>
     
