@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import cn.aofeng.common4j.ILifeCycle;
 import cn.aofeng.common4j.lang.StringUtil;
+import cn.aofeng.common4j.thread.DefaultThreadFactory;
 import cn.aofeng.threadpool4j.job.ThreadPoolStateJob;
 import cn.aofeng.threadpool4j.job.ThreadStackJob;
 import cn.aofeng.threadpool4j.job.ThreadStateJob;
@@ -101,7 +102,7 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
         jobThread.setName("threadpool4j-threadpoolstate");
         jobThread.start();
         
-        _logger.info("start  job 'threadpool4j-threadpoolstate' success");
+        _logger.info("start job 'threadpool4j-threadpoolstate' success");
     }
     
     /**
