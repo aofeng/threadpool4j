@@ -3,7 +3,8 @@ package cn.aofeng.threadpool4j.job;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import cn.aofeng.threadpool4j.ThreadStateInfo;
 import cn.aofeng.threadpool4j.ThreadUtil;
@@ -15,7 +16,7 @@ import cn.aofeng.threadpool4j.ThreadUtil;
  */
 public class ThreadStateJob extends AbstractJob {
 
-    private static Logger _logger = Logger.getLogger(ThreadStateJob.class);
+    private static Logger _logger = LoggerFactory.getLogger(ThreadStateJob.class);
     
     public ThreadStateJob(int interval) {
         super._interval = interval;
@@ -27,9 +28,9 @@ public class ThreadStateJob extends AbstractJob {
         
         for (Entry<String, ThreadStateInfo> entry : statMap.entrySet()) {
             ThreadStateInfo stateInfo = entry.getValue();
-            _logger.info( String.format("ThreadGroup:%s, New:%d,  Runnable:%d, Blocked:%d, Waiting:%d, TimedWaiting:%d, Terminated:%d", 
+            _logger.info("ThreadGroup:{}, New:{},  Runnable:{}, Blocked:{}, Waiting:{}, TimedWaiting:{}, Terminated:{}", 
                     entry.getKey(), stateInfo.getNewCount(), stateInfo.getRunnableCount(), stateInfo.getBlockedCount(),
-                    stateInfo.getWaitingCount(), stateInfo.getTimedWaitingCount(), stateInfo.getTerminatedCount()) );
+                    stateInfo.getWaitingCount(), stateInfo.getTimedWaitingCount(), stateInfo.getTerminatedCount());
         }
         
         super.sleep();

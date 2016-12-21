@@ -1,6 +1,7 @@
 package cn.aofeng.threadpool4j.handler;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import cn.aofeng.threadpool4j.FailHandler;
 
@@ -11,7 +12,7 @@ import cn.aofeng.threadpool4j.FailHandler;
  */
 public class LogErrorFailHandler implements FailHandler<Object> {
 
-    private static Logger _logger = Logger.getLogger(LogErrorFailHandler.class);  
+    private static Logger _logger = LoggerFactory.getLogger(LogErrorFailHandler.class);  
     
     /**
      * 处理无法提交线程池执行的异步任务。
@@ -21,7 +22,7 @@ public class LogErrorFailHandler implements FailHandler<Object> {
      */
     @Override
     public void execute(Object task) {
-        _logger.error("queue is full, a task cannot be submit to threadpool, task information:"+task);
+        _logger.error("queue is full, a task cannot be submit to threadpool, task information:{}", task);
     }
 
 }

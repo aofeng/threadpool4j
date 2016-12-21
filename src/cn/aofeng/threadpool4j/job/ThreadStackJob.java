@@ -3,7 +3,8 @@ package cn.aofeng.threadpool4j.job;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import cn.aofeng.common4j.lang.SystemUtil;
 
@@ -14,7 +15,7 @@ import cn.aofeng.common4j.lang.SystemUtil;
  */
 public class ThreadStackJob extends AbstractJob {
 
-    private static Logger _logger = Logger.getLogger(ThreadStackJob.class);
+    private static Logger _logger = LoggerFactory.getLogger(ThreadStackJob.class);
     
     private String _lineSeparator = SystemUtil.getEndLine();
     /** 线程堆栈缓冲区初始大小 */

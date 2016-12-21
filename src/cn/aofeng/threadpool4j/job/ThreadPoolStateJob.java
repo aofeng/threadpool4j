@@ -6,7 +6,8 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 收集所有线程池的状态信息，统计并输出汇总信息。
@@ -15,7 +16,7 @@ import org.apache.log4j.Logger;
  */
 public class ThreadPoolStateJob extends AbstractJob {
 
-    private static Logger _logger = Logger.getLogger(ThreadPoolStateJob.class);
+    private static Logger _logger = LoggerFactory.getLogger(ThreadPoolStateJob.class);
     
     private Map<String, ExecutorService> _multiThreadPool;
     
@@ -29,8 +30,8 @@ public class ThreadPoolStateJob extends AbstractJob {
         Set<Entry<String, ExecutorService>> poolSet = _multiThreadPool.entrySet();
         for (Entry<String, ExecutorService> entry : poolSet) {
             ThreadPoolExecutor pool = (ThreadPoolExecutor) entry.getValue();
-            _logger.info( String.format("ThreadPool:%s, ActiveThread:%d, TotalTask:%d, CompletedTask:%d, Queue:%d", 
-                    entry.getKey(), pool.getActiveCount(), pool.getTaskCount(), pool.getCompletedTaskCount(), pool.getQueue().size()) );
+            _logger.info("ThreadPool:{}, ActiveThread:{}, TotalTask:{}, CompletedTask:{}, Queue:{}", 
+                    entry.getKey(), pool.getActiveCount(), pool.getTaskCount(), pool.getCompletedTaskCount(), pool.getQueue().size());
         }
         
         super.sleep();

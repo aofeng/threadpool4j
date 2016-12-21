@@ -14,7 +14,8 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import cn.aofeng.common4j.ILifeCycle;
 import cn.aofeng.common4j.lang.StringUtil;
@@ -32,7 +33,7 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
     /** 默认的线程池名称 */
     private static final String DEFAULT_THREAD_POOL = "default";
 
-    private static Logger _logger = Logger.getLogger(ThreadPoolImpl.class);    
+    private static Logger _logger = LoggerFactory.getLogger(ThreadPoolImpl.class);    
     
     protected ThreadPoolConfig _threadPoolConfig = new ThreadPoolConfig();
     protected int _status = ThreadPoolStatus.UNINITIALIZED;
@@ -49,7 +50,7 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
     @Override
     public void init() {
         if (ThreadPoolStatus.UNINITIALIZED != _status) {
-            _logger.warn( String.format("initialization thread pool failed, because the status was wrong, current status was %d (0:UNINITIALIZED, 1:INITIALITION_SUCCESSFUL, 2:INITIALITION_FAILED, 3:DESTROYED)", _status) );
+            _logger.warn("initialization thread pool failed, because the status was wrong, current status was {} (0:UNINITIALIZED, 1:INITIALITION_SUCCESSFUL, 2:INITIALITION_FAILED, 3:DESTROYED)", _status);
             return;
         }
         
@@ -80,7 +81,7 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
                     threadPoolInfo.getThreadKeepAliveTime(), TimeUnit.SECONDS, workQueue, 
                     new DefaultThreadFactory(threadPoolInfo.getName()));
             _multiThreadPool.put(threadPoolInfo.getName(), threadPool);
-            _logger.info( String.format("initialization thread pool %s success", threadPoolInfo.getName()) );
+            _logger.info("initialization thread pool {} success", threadPoolInfo.getName());
         }
     }
     
@@ -130,6 +131,8 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
         Thread jobThread = new Thread(_threadStackJob);
         jobThread.setName("threadpool4j-threadstack");
         jobThread.start();
+        
+        _logger.info("start job 'threadpool4j-threadstack' success");
     }
     
     public Future<?> submit(Runnable task) {
@@ -142,9 +145,7 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
         }
         
         ExecutorService threadPool = getExistsThreadPool(threadpoolName);
-        if (_logger.isDebugEnabled()) {
-            _logger.debug("submit a task to thread pool "+threadpoolName);
-        }
+        _logger.debug("submit a task to thread pool {}", threadpoolName);
         
         return threadPool.submit(task);
     }
@@ -194,9 +195,7 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
         }
         
         ExecutorService threadPool = getExistsThreadPool(threadpoolName);
-        if (_logger.isDebugEnabled()) {
-            _logger.debug("submit a task to thread pool "+threadpoolName);
-        }
+        _logger.debug("submit a task to thread pool {}", threadpoolName);
         
         return threadPool.submit(task);
     }
@@ -232,9 +231,7 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
         }
         
         ExecutorService threadPool = getExistsThreadPool(threadpoolName);
-        if (_logger.isDebugEnabled()) {
-            _logger.debug("invoke task list in thread pool "+threadpoolName);
-        }
+        _logger.debug("invoke task list in thread pool {}", threadpoolName);
         
         try {
             return threadPool.invokeAll(tasks, timeout, timeoutUnit);
@@ -266,7 +263,7 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
         }
         
         for (Entry<String, ExecutorService> entry : _multiThreadPool.entrySet()) {
-            _logger.info("shutdown the thread pool "+entry.getKey());
+            _logger.info("shutdown the thread pool {}", entry.getKey());
             entry.getValue().shutdown();
         }
         

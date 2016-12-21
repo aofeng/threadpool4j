@@ -1,65 +1,121 @@
 <project name="threadpool4j" basedir="." default="all">
-    <property name="project_name" value="threadpool4j"></property>
-    <property name="project_version" value="3.0.0"></property>
-    <property name="package_name" value="${project_name}-${project_version}"></property>
+	<property name="project.name" value="threadpool4j"></property>
+	<property name="project.version" value="3.0.0"></property>
+	<property name="package.name" value="${project.name}-${project.version}"></property>
 	<property name="author" value="NieYong"></property>
 	<property name="organization" value="cn.aofeng"></property>
-	<property name="project_url" value="https://github.com/aofeng/threadpool4jj"></property>
-    <property name="src_dir" value="${basedir}/src"></property>
-    <property name="lib_dir" value="${basedir}/lib"></property>
-    <property name="build_dir" value="${basedir}/temp"></property>
-    <property name="dist_dir" value="${basedir}/dist"></property>
+	<property name="project.url" value="https://github.com/aofeng/threadpool4jj"></property>
+	<property name="src.dir" value="${basedir}/src"></property>
+	<property name="lib.dir" value="${basedir}/lib"></property>
+	<property name="build.dir" value="${basedir}/temp"></property>
+	<property name="dist.dir" value="${basedir}/dist"></property>
+	<property name="src.test.dir" location="${basedir}/test" />
+	<property name="lib.test.dir" value="${basedir}/libtest"></property>
+	<property name="target.unit-test.dir" location="${build.dir}/unit-test" />
+	<property name="target.cover-test.dir" location="${build.dir}/cover-test" />
+	<property name="target.report.dir" location="${build.dir}/report" />
+	<property name="target.unit-test-report.dir" location="${target.report.dir}/unit-test" />
+	<property name="target.cover-test-report.dir" location="${target.report.dir}/cover-test" />
 
-    <path id="app.classpath">
-        <fileset dir="${lib_dir}">
-            <include name="**/*.jar" />
-        </fileset>
-        <path location="${basedir}/config" />
-        <path location="${basedir}/resources" />
-    </path>
+	<path id="app.classpath">
+		<fileset dir="${lib.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+		<path location="${basedir}/conf" />
+	</path>
+	
+	<path id="app.test.classpath">
+	    <fileset dir="${lib.test.dir}">
+	        <include name="**/*.jar" />
+	    </fileset>
+	    <path location="${basedir}/test" />
+	</path>
 
-    <target name="clean">
-        <delete dir="${build_dir}"></delete>
-        <delete dir="${dist_dir}"></delete>
-    </target>
+	<target name="clean">
+		<delete dir="${build.dir}"></delete>
+		<delete dir="${dist.dir}"></delete>
+	</target>
 
-    <target name="prepare">
-        <mkdir dir="${build_dir}" />
-        <mkdir dir="${build_dir}/${package_name}" />
-        <mkdir dir="${dist_dir}" />
-    </target>
+	<target name="prepare">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${build.dir}/${package.name}" />
+		<mkdir dir="${dist.dir}" />
+	</target>
 
-    <target name="compile">
-        <javac srcdir="${src_dir}" destdir="${build_dir}/${package_name}" debug="on" source="1.6" includeantruntime="on">
-            <classpath refid="app.classpath">
-            </classpath>
-        </javac>
-    </target>
+	<target name="compile">
+		<javac srcdir="${src.dir}" destdir="${build.dir}/${package.name}" debug="on" source="1.6" includeantruntime="on">
+			<classpath refid="app.classpath">
+			</classpath>
+		</javac>
+	</target>
 
-    <target name="jar">
-        <jar destfile="${dist_dir}/${package_name}.jar" basedir="${build_dir}/${package_name}">
-        	<manifest>
-        		<attribute name="Built-By" value="${author}" />
-        		<attribute name="Implementation-Vendor-Id" value="${organization}" />
-        		<attribute name="Implementation-Vendor" value="${project_url}" />
-        		<attribute name="Implementation-Title" value="${project_name}" />
-        		<attribute name="Implementation-Version" value="${project_version}" />
-        	</manifest>
-        </jar>
-    </target>
+	<target name="jar">
+		<jar destfile="${dist.dir}/${package.name}.jar" basedir="${build.dir}/${package.name}">
+			<manifest>
+				<attribute name="Built-By" value="${author}" />
+				<attribute name="Implementation-Vendor-Id" value="${organization}" />
+				<attribute name="Implementation-Vendor" value="${project.url}" />
+				<attribute name="Implementation-Title" value="${project.name}" />
+				<attribute name="Implementation-Version" value="${project.version}" />
+			</manifest>
+		</jar>
+	</target>
 
-    <target name="jar-src">
-        <jar destfile="${dist_dir}/${package_name}-sources.jar" basedir="${src_dir}">
-            <manifest>
-            	<attribute name="Built-By" value="${author}" />
-            	<attribute name="Implementation-Vendor-Id" value="${organization}" />
-            	<attribute name="Implementation-Vendor" value="${project_url}" />
-            	<attribute name="Implementation-Title" value="${project_name}" />
-            	<attribute name="Implementation-Version" value="${project_version}" />
-            </manifest>
-        </jar>
-    </target>
+	<target name="jar-src">
+		<jar destfile="${dist.dir}/${package.name}-sources.jar" basedir="${src.dir}">
+			<manifest>
+				<attribute name="Built-By" value="${author}" />
+				<attribute name="Implementation-Vendor-Id" value="${organization}" />
+				<attribute name="Implementation-Vendor" value="${project.url}" />
+				<attribute name="Implementation-Title" value="${project.name}" />
+				<attribute name="Implementation-Version" value="${project.version}" />
+			</manifest>
+		</jar>
+	</target>
 
-    <target name="all" depends="clean, prepare, compile, jar, jar-src">
-    </target>
+	<target name="compile.test" depends="compile">
+		<mkdir dir="${target.unit-test.dir}" />
+		<javac srcdir="${src.test.dir}" destdir="${target.unit-test.dir}" 
+	            debug="on" source="1.6" includeantruntime="on">
+			<classpath refid="app.classpath"></classpath>
+			<classpath refid="app.test.classpath"></classpath>
+			<classpath location="${build.dir}/${package.name}"></classpath>
+		</javac>
+		<copy todir="${target.unit-test.dir}">
+			<fileset dir="${src.test.dir}">
+				<include name="**/*.properties" />
+				<include name="**/*.xml" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="unit-test" depends="compile.test">
+	    <mkdir dir="${target.unit-test-report.dir}" />
+	    <junit printsummary="on" haltonerror="off" haltonfailure="off" fork="on">
+	        <formatter type="plain" usefile="off"/>
+	        <formatter type="xml" usefile="on" />
+	        <batchtest todir="${target.unit-test-report.dir}">
+	            <fileset dir="${target.unit-test.dir}">
+	                <include name="**/*Test.class"/>
+	            </fileset>
+	        </batchtest>
+	        <classpath refid="app.classpath"></classpath>
+	        <classpath refid="app.test.classpath"></classpath>
+	    	<classpath path="${build.dir}/${package.name}"></classpath>
+	    	<classpath path="${target.unit-test.dir}"></classpath>
+	    </junit>
+	</target>
+
+	<target name="unit-test-report" depends="unit-test">
+		<mkdir dir="${target.unit-test-report.dir}/html" />
+		<junitreport todir="${target.unit-test-report.dir}">
+			<fileset dir="${target.unit-test-report.dir}">
+				<include name="TEST-*.xml" />
+	        </fileset>
+	        <report todir="${target.unit-test-report.dir}/html" />
+	    </junitreport>
+	</target>
+
+	<target name="all" depends="clean, prepare, compile, jar, jar-src">
+	</target>
 </project>
