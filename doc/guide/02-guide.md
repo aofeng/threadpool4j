@@ -1,12 +1,12 @@
-#一、依赖
+# 一、依赖
 * common4j-0.2.2.jar
 * commons-lang-2.6.jar
 * log4j-1.2.16.jar
 
 注：所有的依赖类库位于`lib目录`下。
 
-#二、配置
-##1、配置多个线程池
+# 二、配置
+## 1、配置多个线程池
 在应用的CLASSPATH的任意路径（如：应用的classes目录）下新建一个threadpool4j.xml的配置文件，其内容为：
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -47,7 +47,7 @@
 </threadpool4j>
 ```
 
-##2、配置日志输出
+## 2、配置日志输出
 注：如果在threadpool4j.xml中开启了状态信息输出（默认开启），却没有配置专门的日志文件，将输出到应用的默认日志文件中。
 
 **1、配置线程池状态日志输出**
@@ -89,8 +89,8 @@ log4j.appender.threadstack.layout.ConversionPattern=[%d{yyyy-MM-dd HH:mm:ss}] ~ 
 ```
 注：日志输出路径"/home/nieyong/logs/thread/threadpool4j-threadstack.log "由项目根据实际情况修改。
 
-#三、使用线程池
-##1、启动线程池
+# 三、使用线程池
+## 1、启动线程池
 
 在应用的启动过程中执行线程池的初始化操作。
 ```java
@@ -103,8 +103,8 @@ tpm.init();
 2014-03-31 21:13:13,925 INFO  initialization 2 thread pool successfully
 </pre>
 
-##2、不同场景的使用
-###场景1：执行不需要返回值的异步任务
+## 2、不同场景的使用
+### 场景1：执行不需要返回值的异步任务
 ```java
 ThreadPoolManager tpm = ThreadPoolManager.getSingleton();
 ThreadPool threadPool = tpm.getThreadPool();
@@ -126,7 +126,7 @@ Runnable task2 = new Runnable() {
 threadPool.submit(task2, "other");   // 将task2提交到名为"other"的线程池执行
 ```
 
-###场景2：执行需要返回值的异步任务
+### 场景2：执行需要返回值的异步任务
 **1）编写一个实现Callable接口的异步任务类。**
 ```java
 public class CallableAnsyTask implements Callable<Long> {
@@ -162,7 +162,7 @@ threadPool.submit(task);
 threadPool.submit(task, "other");
 ```
 
-###场景3：并行调用多个异步任务
+### 场景3：并行调用多个异步任务
 **1）编写一个实现Callable接口的异步任务类。**
 ```java
 public class CallableAnsyTask implements Callable<Long> {
