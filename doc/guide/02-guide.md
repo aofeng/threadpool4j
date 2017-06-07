@@ -203,7 +203,7 @@ for (Future<Long> future : futures) {
 }
 ```
 
-##3、关闭多线程池
+## 3、关闭多线程池
 在应用关闭时执行线程池的资源释放操作，释放资源的过程会将队列中的异步任务都执行完成。
 ```java
 ThreadPoolManager tpm = ThreadPoolManager.getSingleton();
