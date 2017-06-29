@@ -7,7 +7,7 @@ import cn.aofeng.threadpool4j.FailHandler;
  * 
  * @author <a href="mailto:aofengblog@163.com">聂勇</a>
  */
-public class DiscardFailHandler implements FailHandler<Object> {
+public class DiscardFailHandler<T> implements FailHandler<T> {
 
     /**
      * 处理无法提交线程池执行的异步任务。
@@ -16,7 +16,7 @@ public class DiscardFailHandler implements FailHandler<Object> {
      * @return null
      */
     @Override
-    public void execute(Object task) {
+    public void execute(T task) {
         // nothing
     }
 

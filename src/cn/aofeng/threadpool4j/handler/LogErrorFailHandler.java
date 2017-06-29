@@ -10,7 +10,7 @@ import cn.aofeng.threadpool4j.FailHandler;
  * 
  * @author <a href="mailto:aofengblog@163.com">聂勇</a>
  */
-public class LogErrorFailHandler implements FailHandler<Object> {
+public class LogErrorFailHandler<T> implements FailHandler<T> {
 
     private static Logger _logger = LoggerFactory.getLogger(LogErrorFailHandler.class);  
     
@@ -21,7 +21,7 @@ public class LogErrorFailHandler implements FailHandler<Object> {
      * @return null
      */
     @Override
-    public void execute(Object task) {
+    public void execute(T task) {
         _logger.error("queue is full, a task cannot be submit to threadpool, task information:{}", task);
     }
 
