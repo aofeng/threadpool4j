@@ -82,7 +82,7 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
                     threadPoolInfo.getThreadKeepAliveTime(), TimeUnit.SECONDS, workQueue, 
                     new DefaultThreadFactory(threadPoolInfo.getName()));
             _multiThreadPool.put(threadPoolInfo.getName(), threadPool);
-            _logger.info("initialization thread pool {} success", threadPoolInfo.getName());
+            _logger.info("initialization thread pool '{}' success", threadPoolInfo.getName());
         }
     }
     
@@ -264,7 +264,7 @@ public class ThreadPoolImpl implements ILifeCycle, ThreadPool {
         }
         
         for (Entry<String, ExecutorService> entry : _multiThreadPool.entrySet()) {
-            _logger.info("shutdown the thread pool {}", entry.getKey());
+            _logger.info("shutdown the thread pool '{}'", entry.getKey());
             entry.getValue().shutdown();
         }
         
