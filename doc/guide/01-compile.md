@@ -11,8 +11,8 @@ ant
 ````
 会生成一个`dist`目录，下面有两个文件。如：
 <pre>
-threadpool4j-3.0.0-src.jar    源码jar
-threadpool4j-3.0.0.jar        用于发布的二进制jar
+threadpool4j-3.1.0-src.jar    源码jar
+threadpool4j-3.1.0.jar        用于发布的二进制jar
 </pre>
 
 ## 方式二：Maven
@@ -22,6 +22,6 @@ mvn package
 ```
 会生成一个`target`目录，下面有两个文件。如：
 <pre>
-threadpool4j-3.0.0-src.jar    源码jar
-threadpool4j-3.0.0.jar        用于发布的二进制jar
+threadpool4j-3.1.0-src.jar    源码jar
+threadpool4j-3.1.0.jar        用于发布的二进制jar
 </pre>

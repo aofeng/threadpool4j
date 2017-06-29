@@ -1,9 +1,11 @@
 # 一、依赖
-* common4j-0.2.2.jar
+* common4j-0.3.0.jar
 * commons-lang-2.6.jar
+* slf4j-api-1.7.22.jar
+* slf4j-log4j12-1.7.22.jar
 * log4j-1.2.16.jar
 
-注：所有的依赖类库位于`lib目录`下。
+注：所有的依赖类库位于**lib目录**下。
 
 # 二、配置
 ## 1、配置多个线程池
@@ -90,9 +92,9 @@ log4j.appender.threadstack.layout.ConversionPattern=[%d{yyyy-MM-dd HH:mm:ss}] ~ 
 注：日志输出路径"/home/nieyong/logs/thread/threadpool4j-threadstack.log "由项目根据实际情况修改。
 
 # 三、使用线程池
-## 1、启动线程池
+## 1、初始化多线程池
 
-在应用的启动过程中执行线程池的初始化操作。
+在应用的启动的时候执行线程池的初始化操作。
 ```java
 ThreadPoolManager tpm = ThreadPoolManager.getSingleton();
 tpm.init();
@@ -100,70 +102,98 @@ tpm.init();
 
 输出的日志类似如下：
 <pre>
-2014-03-31 21:13:13,925 INFO  initialization 2 thread pool successfully
+2017-06-29 14:19:16,252 INFO  initialization thread pool 'other' success
+2017-06-29 14:19:16,253 INFO  initialization thread pool 'default' success
+2017-06-29 14:19:16,255 INFO  start job 'threadpool4j-threadpoolstate' success
+2017-06-29 14:19:16,260 INFO  start job 'threadpool4j-threadstate' success
+2017-06-29 14:19:16,263 INFO  start job 'threadpool4j-threadstack' success
 </pre>
 
 ## 2、不同场景的使用
 ### 场景1：执行不需要返回值的异步任务
+**1）编写一个实现Runnable接口的异步任务类** 
+```java
+public class RunnableAsynTask implements Runnable {
+
+    // 耗时的操作（配置低一些的机器小心CPU 100％，反应慢）
+    public void needSomeTime() {
+        int len = 50000;
+        String[] intArray = new String[len];
+        Random random = new Random(len);
+        
+        // 初始化数组
+        for (int i = 0; i < len; i++) {
+            intArray[i] = String.valueOf(random.nextInt());
+        }
+        
+        // 排序
+        Arrays.sort(intArray);
+    }
+    
+    @Override
+    public void run() {
+        long startTime = System.currentTimeMillis();
+        needSomeTime();
+        long endTime = System.currentTimeMillis();
+        System.out.println("执行任务耗时："+(endTime-startTime));
+    }
+}
+```
+
+**2）执行异步任务**
 ```java
 ThreadPoolManager tpm = ThreadPoolManager.getSingleton();
 ThreadPool threadPool = tpm.getThreadPool();
 
-Runnable task1 = new Runnable() {
-    @Override
-    public void run() {
-        System.out.println("执行异步任务1");
-    }
-};
-threadPool.submit(task1);   // 未指定线程池名称时，任务会提交到名为"default"的线程池执行
+// 未指定线程池名称时，任务会提交到名为"default"的线程池执行
+threadPool.submit(new RunnableAsynTask());
 
-Runnable task2 = new Runnable() {
-    @Override
-    public void run() {
-        System.out.println("执行异步任务2");
-    }
-};
-threadPool.submit(task2, "other");   // 将task2提交到名为"other"的线程池执行
+// 将task2提交到名为"other"的线程池执行
+threadPool.submit(new RunnableAsynTask(), "other");
 ```
 
 ### 场景2：执行需要返回值的异步任务
-**1）编写一个实现Callable接口的异步任务类。**
+**1）编写一个实现Callable接口的异步任务类**
 ```java
 public class CallableAnsyTask implements Callable<Long> {
+
     private int[] _arr;
-     
+    
     public CallableAnsyTask(int[] arr) {
         _arr = arr;
     }
-     
+    
     @Override
     public Long call() throws Exception {
         long result = 0;
         for (int i = 0; i < _arr.length; i++) {
             result += _arr[i];
         }
-         
+        
         return result;
     }
 }
 ```
 
-**2）执行异步任务。**
+**2）执行异步任务**
 ```java
 ThreadPoolManager tpm = ThreadPoolManager.getSingleton();
 ThreadPool threadPool = tpm.getThreadPool();
+
 int[] arr = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 CallableAnsyTask task = new CallableAnsyTask(arr);
 
 // 将异步任务交给默认的线程池default执行
-threadPool.submit(task);
+Future<Long> future = threadPool.submit(task);
+System.out.println("异步任务在线程池default的执行结果为:"+future.get());
   
 // 将异步任务交给指定的线程池other执行
 threadPool.submit(task, "other");
+System.out.println("异步任务在线程池other的执行结果为:"+future.get());
 ```
 
 ### 场景3：并行调用多个异步任务
-**1）编写一个实现Callable接口的异步任务类。**
+**1）编写一个实现Callable接口的异步任务类**
 ```java
 public class CallableAnsyTask implements Callable<Long> {
     private int[] _arr;
@@ -184,7 +214,7 @@ public class CallableAnsyTask implements Callable<Long> {
 }
 ```
  
-**2）并行调用多个异步任务。**
+**2）并行调用多个异步任务**
 ```java
 // 创建多个异步任务
 int[] arr = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
@@ -203,6 +233,20 @@ for (Future<Long> future : futures) {
 }
 ```
 
+### 场景4：线程池队列满，任务提交失败时可自定义处理
+```java
+// 队列满时，提交失败的任务直接丢弃
+threadPool.submit(new RunnableAsynTask(), "default", new DiscardFailHandler<Runnable>());
+
+// 队列满时，提交失败的任务信息会输出ERROR日志
+int[] arr = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+threadPool.submit(new CallableAnsyTask(arr), "other", new LogErrorFailHandler<Callable<Long>>());
+```
+
+说明：
+
+* 可以实现`FailHandler`接口，自行处理提交失败的任务。
+
 ## 3、关闭多线程池
 在应用关闭时执行线程池的资源释放操作，释放资源的过程会将队列中的异步任务都执行完成。
 ```java
@@ -211,6 +255,9 @@ tpm.destroy();
 ```
 输出的日志类似如下：
 <pre>
-2014-03-31 21:16:48,512 INFO  shutdown the thread pool other
-2014-03-31 21:16:48,513 INFO  shutdown the thread pool default
+2017-06-29 14:20:57,170 INFO  shutdown the thread pool 'default'
+2017-06-29 14:20:57,171 INFO  shutdown the thread pool 'other'
+2017-06-29 14:20:57,171 INFO  stop job 'threadpool4j-threadpoolstate' success
+2017-06-29 14:20:57,171 INFO  stop job 'threadpool4j-threadstate' success
+2017-06-29 14:20:57,172 INFO  stop job 'threadpool4j-threadstack' success
 </pre>

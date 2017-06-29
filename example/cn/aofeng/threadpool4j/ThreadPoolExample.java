@@ -7,6 +7,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import cn.aofeng.threadpool4j.handler.DiscardFailHandler;
+import cn.aofeng.threadpool4j.handler.LogErrorFailHandler;
+
 /**
  * 多线程池调用代码示例。
  * 
@@ -16,12 +19,13 @@ public class ThreadPoolExample {
     
     public static void main(String[] args) throws Exception {
         ThreadPoolManager tpm = ThreadPoolManager.getSingleton();
-        ThreadPool threadPool = tpm.getThreadPool();
         tpm.init(); // 在应用启动时调用
         
+        ThreadPool threadPool = tpm.getThreadPool();
         executeRunnableAnsyTask(threadPool);
         executeCallableAnsyTask(threadPool);
         parallelExecuteAnsyTask(threadPool);
+        handleSubmitFail(threadPool);
         
         tpm.destroy(); // 在应用关闭时调用
     }
@@ -31,7 +35,7 @@ public class ThreadPoolExample {
      */
     private static void executeRunnableAnsyTask(ThreadPool threadPool)
             throws InterruptedException {
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 10; i++) {
             threadPool.submit(new RunnableAsynTask());
             threadPool.submit(new RunnableAsynTask(), "other");
             
@@ -71,4 +75,13 @@ public class ThreadPoolExample {
         
     }
 
+    private static void handleSubmitFail(ThreadPool threadPool) {
+        // 队列满时，提交失败的任务直接丢弃
+        threadPool.submit(new RunnableAsynTask(), "default", new DiscardFailHandler<Runnable>());
+        
+        // 队列满时，提交失败的任务信息会输出ERROR日志
+        int[] arr = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        threadPool.submit(new CallableAnsyTask(arr), "other", new LogErrorFailHandler<Callable<Long>>());
+    }
+    
 }
