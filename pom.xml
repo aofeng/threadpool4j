@@ -4,6 +4,7 @@
 	<artifactId>threadpool4j</artifactId>
 	<version>3.2.0</version>
 	<name>threadpool4j</name>
+	<url>https://github.com/aofeng/threadpool4j</url>
 	<description>轻量级多线程池。1）支持异步任务分派至不同的线程池执行；2）支持并行执行多个异步任务；3）支持需要返回结果和不需要返回结果的异步任务。</description>
 
 	<packaging>jar</packaging>
