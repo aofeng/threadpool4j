@@ -86,6 +86,7 @@ public class ThreadPoolConfig implements ILifeCycle {
     
     /**
      * 指定名称的线程池的配置是否存在。
+     * @param poolName 线程池名称
      * 
      * @return 如果指定名称的线程池的配置存在返回true，如果不存在返回false；如果传入的线程池名称为null也返回false。
      */
