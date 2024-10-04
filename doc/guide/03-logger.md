@@ -1,46 +1,142 @@
-注：如果在threadpool4j.xml中开启了状态信息输出（默认关闭），却没有配置专门的日志文件，将输出到应用的默认日志文件中。
+注：如果在threadpool4j.xml中开启了状态信息输出（默认关闭），却没有配置专门的日志输出，将输出到应用的默认日志文件中。
 
-# 配置线程池状态日志输出
+# 配置日志输出
 
-```properties
-# 线程池状态输出日志
-log4j.logger.cn.aofeng.threadpool4j.job.ThreadPoolStateJob=INFO, threadpoolstate
-log4j.additivity.cn.aofeng.threadpool4j.job.ThreadPoolStateJob=false
-log4j.appender.threadpoolstate=org.apache.log4j.DailyRollingFileAppender
-log4j.appender.threadpoolstate.File=/home/nieyong/logs/threadpool4j-threadpoolstate.log
-log4j.appender.threadpoolstate.DatePattern='.'yyyy-MM-dd
-log4j.appender.threadpoolstate.layout=org.apache.log4j.PatternLayout
-log4j.appender.threadpoolstate.layout.ConversionPattern=[%d{yyyy-MM-dd HH:mm:ss}] ~ %m%n
+## 配置线程池状态日志输出
+
+```xml
+<appender name="THREADPOOLSTATE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${THREADPOOLSTATE_LOG_FILE}</file>
+    <encoder>
+        <pattern>%d{yyyy-MM-dd HH:mm:ss} ~ %m%n</pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+        <fileNamePattern>${THREADPOOLSTATE_LOG_FILE}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+        <maxHistory>14</maxHistory>
+        <maxFileSize>200MB</maxFileSize>
+    </rollingPolicy>
+</appender>
+<logger name="cn.aofeng.threadpool4j.job.ThreadPoolStateJob" level="INFO" additivity="false" >
+    <appender-ref ref="THREADPOOLSTATE"/>
+</logger>
 ```
 
-注：日志输出路径"/home/nieyong/logs/threadpool4j-threadpoolstate.log"由项目根据实际情况修改。
+注：日志输出路径 ${THREADPOOLSTATE_LOG_FILE} 根据项目实际情况修改。
 
-# 配置线程状态日志输出
+## 配置线程状态日志输出
 
-```properties
-# 所有线程组中线程状态输出日志
-log4j.logger.cn.aofeng.threadpool4j.job.ThreadStateJob=INFO, threadstate
-log4j.additivity.cn.aofeng.threadpool4j.job.ThreadStateJob=false
-log4j.appender.threadstate=org.apache.log4j.DailyRollingFileAppender
-log4j.appender.threadstate.File=/home/nieyong/logs/threadpool4j-threadstate.log
-log4j.appender.threadstate.DatePattern='.'yyyy-MM-dd
-log4j.appender.threadstate.layout=org.apache.log4j.PatternLayout
-log4j.appender.threadstate.layout.ConversionPattern=[%d{yyyy-MM-dd HH:mm:ss}] ~ %m%n
+```xml
+<appender name="THREADSTATE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${THREADSTATE_LOG_FILE}</file>
+    <encoder>
+        <pattern>%d{yyyy-MM-dd HH:mm:ss} ~ %m%n</pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+        <fileNamePattern>${THREADSTATE_LOG_FILE}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+        <maxHistory>14</maxHistory>
+        <maxFileSize>200MB</maxFileSize>
+    </rollingPolicy>
+</appender>
+<logger name="cn.aofeng.threadpool4j.job.ThreadStateJob" level="INFO" additivity="false" >
+    <appender-ref ref="THREADSTATE"/>
+</logger>
 ```
 
-注：日志输出路径"/home/nieyong/logs/threadpool4j-threadstate.log"由项目根据实际情况修改。
+注：日志输出路径 ${THREADSTATE_LOG_FILE} 根据项目实际情况修改。
 
-# 配置线程堆栈日志输出
+## 配置线程堆栈日志输出
 
-```properties
-# 所有线程的线程堆栈输出日志
-log4j.logger.cn.aofeng.threadpool4j.job.ThreadStackJob=INFO, threadstack
-log4j.additivity.cn.aofeng.threadpool4j.job.ThreadStackJob=false
-log4j.appender.threadstack=org.apache.log4j.DailyRollingFileAppender
-log4j.appender.threadstack.File=/home/nieyong/logs/thread/threadpool4j-threadstack.log 
-log4j.appender.threadstack.DatePattern='.'yyyy-MM-dd-HH
-log4j.appender.threadstack.layout=org.apache.log4j.PatternLayout
-log4j.appender.threadstack.layout.ConversionPattern=[%d{yyyy-MM-dd HH:mm:ss}] ~ %m%n
+```xml
+<appender name="THREADSTACK" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${THREADSTACK_LOG_FILE}</file>
+    <encoder>
+        <pattern>%d{yyyy-MM-dd HH:mm:ss} ~ %m%n</pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+        <fileNamePattern>${THREADSTACK_LOG_FILE}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+        <maxHistory>14</maxHistory>
+        <maxFileSize>200MB</maxFileSize>
+    </rollingPolicy>
+</appender>
+<logger name="cn.aofeng.threadpool4j.job.ThreadStackJob" level="INFO" additivity="false" >
+    <appender-ref ref="THREADSTACK"/>
+</logger>
 ```
 
-注：日志输出路径"/home/nieyong/logs/thread/threadpool4j-threadstack.log "由项目根据实际情况修改。
+注：日志输出路径 ${THREADSTACK_LOG_FILE} 根据项目实际情况修改。
+
+## 完整的日志配置参考
+
+logback-spring.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property name="LOG_PATH" value="${user.home}/logs"/>
+    <property name="APPLICATION_LOG_FILE" value="${LOG_PATH}/application.log"/>
+    <property name="THREADPOOLSTATE_LOG_FILE" value="${LOG_PATH}/threadpoolstate.log"/>
+    <property name="THREADSTATE_LOG_FILE" value="${LOG_PATH}/threadstate.log"/>
+    <property name="THREADSTACK_LOG_FILE" value="${LOG_PATH}/threadstack.log"/>
+
+    <appender name="APPLICATION" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${APPLICATION_LOG_FILE}</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p %m%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${APPLICATION_LOG_FILE}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>14</maxHistory>
+            <maxFileSize>200MB</maxFileSize>
+        </rollingPolicy>
+    </appender>
+    <appender name="THREADPOOLSTATE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${THREADPOOLSTATE_LOG_FILE}</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} ~ %m%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${THREADPOOLSTATE_LOG_FILE}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>14</maxHistory>
+            <maxFileSize>200MB</maxFileSize>
+        </rollingPolicy>
+    </appender>
+    <appender name="THREADSTATE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${THREADSTATE_LOG_FILE}</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} ~ %m%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${THREADSTATE_LOG_FILE}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>14</maxHistory>
+            <maxFileSize>200MB</maxFileSize>
+        </rollingPolicy>
+    </appender>
+    <appender name="THREADSTACK" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${THREADSTACK_LOG_FILE}</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} ~ %m%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${THREADSTACK_LOG_FILE}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>14</maxHistory>
+            <maxFileSize>200MB</maxFileSize>
+        </rollingPolicy>
+    </appender>
+    
+    <logger name="cn.aofeng.threadpool4j.job.ThreadPoolStateJob" level="INFO" additivity="false" >
+        <appender-ref ref="THREADPOOLSTATE"/>
+    </logger>
+
+    <logger name="cn.aofeng.threadpool4j.job.ThreadStateJob" level="INFO" additivity="false" >
+        <appender-ref ref="THREADSTATE"/>
+    </logger>
+
+    <logger name="cn.aofeng.threadpool4j.job.ThreadStackJob" level="INFO" additivity="false" >
+        <appender-ref ref="THREADSTACK"/>
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="APPLICATION"/>
+    </root>
+</configuration>
+```
