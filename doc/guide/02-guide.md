@@ -1,4 +1,4 @@
-# 依赖
+# 引入依赖
 
 ```xml
 <dependency>
@@ -9,8 +9,6 @@
 ```
 
 # 配置
-
-## 配置多个线程池
 
 在应用的CLASSPATH的任意路径（如：应用的classes目录）下新建一个目录biz，并在其中新建 threadpool4j.xml 的配置文件，其内容为：
 
